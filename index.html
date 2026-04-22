@@ -1,0 +1,4187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Logic Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        /* ==================== GLOBAL STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ==================== SOCIAL MEDIA HEADER ==================== */
+        .social-header {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            border-bottom: 2px solid #00d4ff;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .social-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-header .name {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .social-header .project-title {
+            font-size: 1.2em;
+            color: #b0b0c0;
+            margin-bottom: 25px;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.3em;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link i {
+            color: #00d4ff;
+            font-size: 1.3em;
+            transition: color 0.3s ease;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link:hover {
+            transform: scale(1.15) translateY(-5px);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(0, 255, 136, 0.4));
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4), 0 0 20px rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            border-color: #00ff88;
+        }
+
+        .social-link:hover i {
+            color: #00ff88;
+        }
+
+        .social-link:nth-child(2):hover {
+            background: linear-gradient(135deg, rgba(0, 119, 182, 0.4), rgba(0, 119, 182, 0.3));
+            box-shadow: 0 8px 25px rgba(0, 119, 182, 0.4);
+            color: #00a0d2;
+            border-color: #00a0d2;
+        }
+
+        .social-link:nth-child(2):hover i {
+            color: #00a0d2;
+        }
+
+        .social-link:nth-child(3):hover {
+            background: linear-gradient(135deg, rgba(245, 0, 87, 0.4), rgba(245, 0, 87, 0.3));
+            box-shadow: 0 8px 25px rgba(245, 0, 87, 0.4);
+            color: #ff4081;
+            border-color: #ff4081;
+        }
+
+        .social-link:nth-child(3):hover i {
+            color: #ff4081;
+        }
+
+        .social-link:nth-child(4):hover {
+            background: linear-gradient(135deg, rgba(59, 89, 152, 0.4), rgba(59, 89, 152, 0.3));
+            box-shadow: 0 8px 25px rgba(59, 89, 152, 0.4);
+            color: #3b5998;
+            border-color: #3b5998;
+        }
+
+        .social-link:nth-child(4):hover i {
+            color: #3b5998;
+        }
+
+        .social-link:nth-child(6):hover {
+            background: linear-gradient(135deg, rgba(255, 64, 129, 0.4), rgba(255, 64, 129, 0.3));
+            box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4);
+            color: #ff4081;
+            border-color: #ff4081;
+        }
+
+        .social-link:nth-child(6):hover i {
+            color: #ff4081;
+        }
+
+        .social-link:nth-child(8):hover {
+            background: linear-gradient(135deg, rgba(59, 89, 152, 0.4), rgba(59, 89, 152, 0.3));
+            box-shadow: 0 8px 25px rgba(59, 89, 152, 0.4);
+            color: #3b5998;
+            border-color: #3b5998;
+        }
+
+        .social-link:nth-child(8):hover i {
+            color: #3b5998;
+        }
+
+        .divider {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            margin: 0 10px;
+        }
+
+        /* ==================== RESPONSIVE SOCIAL HEADER ==================== */
+        @media (max-width: 768px) {
+            .social-header {
+                padding: 30px 15px;
+            }
+
+            .social-header .name {
+                font-size: 1.8em;
+            }
+
+            .social-header .project-title {
+                font-size: 1em;
+                margin-bottom: 20px;
+            }
+
+            .social-links {
+                gap: 15px;
+            }
+
+            .social-link {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1em;
+            }
+
+            .divider {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .social-header .name {
+                font-size: 1.5em;
+            }
+
+            .social-header .project-title {
+                font-size: 0.9em;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #a0a0a0;
+        }
+
+        /* ==================== CARDS ==================== */
+        .section {
+            background: #252535;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #00d4ff;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .section h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: "";
+            width: 5px;
+            height: 25px;
+            background: linear-gradient(180deg, #00d4ff, #00ff88);
+            border-radius: 3px;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        button {
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            color: #1e1e2e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        button.secondary {
+            background: #404050;
+            color: #00ff88;
+            border: 2px solid #00ff88;
+        }
+
+        /* ==================== EXPLANATIONS ==================== */
+        .explanation {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid #00d4ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 0.95em;
+            color: #c0e0ff;
+            min-height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        /* ==================== VISUALIZATION CONTAINERS ==================== */
+        .visualization {
+            background: #1a1a25;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #404050;
+        }
+
+        /* ==================== BOXES (FOR LOOP) ==================== */
+        .boxes-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+            background: #404050;
+            border: 2px solid #606070;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #a0a0a0;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .box.active {
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            color: #1e1e2e;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+        }
+
+        .box.even {
+            background: #00ff88;
+            color: #1e1e2e;
+            border-color: #00ff88;
+        }
+
+        .box.odd {
+            background: #ff4455;
+            color: white;
+            border-color: #ff4455;
+        }
+
+        /* ==================== PROGRESS BAR ==================== */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 40px;
+            background: #1a1a25;
+            border-radius: 20px;
+            border: 2px solid #404050;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            border-radius: 18px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e1e2e;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .value-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00ff88;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        /* ==================== TRAFFIC LIGHT ==================== */
+        .traffic-light-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .light-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #606070;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+
+        .light-button.red {
+            background: #ff4455;
+            color: white;
+        }
+
+        .light-button.yellow {
+            background: #ffcc00;
+            color: #1e1e2e;
+        }
+
+        .light-button.green {
+            background: #00ff88;
+            color: #1e1e2e;
+        }
+
+        .light-button:hover {
+            transform: scale(1.05);
+        }
+
+        .light-button.active {
+            box-shadow: 0 0 30px currentColor;
+            transform: scale(1.1);
+        }
+
+        /* ==================== OPERATORS SECTION ==================== */
+        .operator-input-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-field {
+            background: #1a1a25;
+            border: 2px solid #404050;
+            color: #e0e0e0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .result-display {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .operators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .operator-card {
+            background: #1a1a25;
+            border: 1px solid #404050;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .operator-card .op {
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .operator-card .result {
+            color: #00ff88;
+            margin-top: 8px;
+        }
+
+        /* ==================== SPEED CONTROL ==================== */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .speed-control label {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .speed-slider {
+            width: 200px;
+            height: 6px;
+            border-radius: 3px;
+            background: #404050;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .speed-value {
+            color: #00ff88;
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        /* ==================== NEW SECTIONS STYLES ==================== */
+        
+        /* SWITCH STATEMENT */
+        .switch-buttons-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .switch-btn {
+            font-size: 0.95em;
+            padding: 10px 16px;
+        }
+
+        .switch-result {
+            background: #1a1a25;
+            border: 2px solid #00ff88;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .result-emoji {
+            font-size: 4em;
+            min-height: 80px;
+        }
+
+        .result-text {
+            font-size: 1.3em;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        /* ARRAY METHODS */
+        .array-boxes-container {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* FUNCTION DEMO */
+        .function-demo-container {
+            margin: 20px 0;
+        }
+
+        .function-input-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .function-flow {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-box {
+            background: #1a1a25;
+            border: 2px solid #404050;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .flow-box.input-box {
+            border-color: #00d4ff;
+        }
+
+        .flow-box.process-box {
+            border-color: #ffcc00;
+        }
+
+        .flow-box.output-box {
+            border-color: #00ff88;
+        }
+
+        .flow-label {
+            font-size: 0.85em;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+        }
+
+        .flow-value {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #00ff88;
+        }
+
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #00d4ff;
+        }
+
+        /* TERNARY OPERATOR */
+        .ternary-flow {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ternary-box {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .ternary-box.result-box {
+            border-color: #00ff88;
+            min-width: 250px;
+        }
+
+        .ternary-condition {
+            font-weight: bold;
+            color: #00d4ff;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .ternary-test {
+            color: #ffcc00;
+            font-size: 1em;
+        }
+
+        .ternary-label {
+            color: #a0a0a0;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+
+        .ternary-result {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* SCOPE DIAGRAM */
+        .scope-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .scope-block {
+            background: #1a1a25;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #404050;
+        }
+
+        .scope-block.global-scope {
+            border-color: #00d4ff;
+        }
+
+        .scope-block.local-scope {
+            border-color: #ff6b9d;
+        }
+
+        .scope-title {
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .scope-content {
+            background: #0a0a0f;
+            border-radius: 6px;
+            padding: 15px;
+            border-left: 3px solid;
+            min-height: 60px;
+        }
+
+        .scope-block.global-scope .scope-content {
+            border-left-color: #00d4ff;
+        }
+
+        .scope-block.local-scope .scope-content {
+            border-left-color: #ff6b9d;
+        }
+
+        .scope-var {
+            color: #c0e0ff;
+            font-family: 'Courier New', monospace;
+            margin: 8px 0;
+            word-break: break-word;
+        }
+
+        /* STRING OPERATIONS */
+        .string-operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .string-op-card {
+            background: #1a1a25;
+            border: 1px solid #404050;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .string-op-name {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .string-op-result {
+            color: #00ff88;
+            font-size: 1em;
+            word-break: break-word;
+        }
+
+        /* COUNTDOWN */
+        .countdown-display {
+            background: linear-gradient(135deg, #1a3a52, #2d1a3a);
+            border: 3px solid #00d4ff;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: inset 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .big-number {
+            font-size: 5em;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            margin-bottom: 20px;
+            animation: countdownPulse 1s infinite;
+        }
+
+        .countdown-status {
+            color: #00d4ff;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        @keyframes countdownPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* ==================== NEW SECTIONS STYLES (VARIABLES, DATA TYPES, ETC) ==================== */
+
+        /* VARIABLES COMPARISON */
+        .var-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .var-card {
+            background: #1a1a25;
+            border: 2px solid #404050;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .var-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .var-card p {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* DATA TYPES GRID */
+        .data-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .data-type-card {
+            background: #1a1a25;
+            border: 1px solid #404050;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .data-type-name {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .data-type-value {
+            color: #00ff88;
+            word-break: break-word;
+            font-size: 0.85em;
+        }
+
+        /* TYPE CONVERSION */
+        .conversion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        /* TEMPLATE LITERALS */
+        .template-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .template-card {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .template-label {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .template-code {
+            background: #0a0a0f;
+            padding: 15px;
+            border-radius: 6px;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            word-break: break-word;
+            min-height: 60px;
+        }
+
+        /* OBJECT DISPLAY */
+        .object-display {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+        }
+
+        /* HOISTING DEMO */
+        .hoisting-demo {
+            background: #1a1a25;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #c0e0ff;
+        }
+
+        /* CLOSURE DISPLAY */
+        .closure-display {
+            background: #1a1a25;
+            border: 2px solid #ff6b9d;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ff6b9d;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CALLBACK DISPLAY */
+        .callback-display {
+            background: #1a1a25;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+        }
+
+        /* HOF RESULTS */
+        .hof-results {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+        }
+
+        /* REDUCE DISPLAY */
+        .reduce-display {
+            background: #1a1a25;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            text-align: center;
+        }
+
+        /* PROMISE DISPLAY */
+        .promise-display {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .promise-state {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .promise-value {
+            color: #00ff88;
+            font-size: 1.1em;
+        }
+
+        /* ASYNC DISPLAY */
+        .async-display {
+            background: #1a1a25;
+            border: 2px solid #ff6b9d;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .async-step {
+            padding: 10px 20px;
+            background: #2d2d40;
+            border-left: 3px solid #ff6b9d;
+            color: #ff6b9d;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* ERROR DISPLAY */
+        .error-display {
+            background: #1a1a25;
+            border: 2px solid #ff4455;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+            min-height: 80px;
+        }
+
+        .error-success {
+            color: #00ff88;
+        }
+
+        .error-caught {
+            color: #ff4455;
+        }
+
+        /* DOM DEMO */
+        .dom-demo {
+            margin: 20px 0;
+        }
+
+        /* EVENT LOG */
+        .event-log {
+            background: #0a0a0f;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .event-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #1a1a25;
+            border-left: 3px solid #ffcc00;
+            color: #ffcc00;
+            border-radius: 3px;
+        }
+
+        /* STORAGE DISPLAY */
+        .storage-display {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+            min-height: 100px;
+        }
+
+        .storage-item {
+            padding: 10px;
+            background: #0a0a0f;
+            border-left: 3px solid #00d4ff;
+            margin: 8px 0;
+            border-radius: 3px;
+        }
+
+        /* JSON COMPARISON */
+        .json-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .json-card {
+            background: #1a1a25;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .json-label {
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .json-display {
+            background: #0a0a0f;
+            padding: 15px;
+            border-radius: 6px;
+            color: #c0e0ff;
+            font-family: 'Courier New', monospace;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.85em;
+        }
+
+        /* JS METHOD DISPLAY */
+        .js-method-display {
+            background: #1a1a25;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* CODE OUTPUT (FOR NEW SECTIONS) */
+        .code-output {
+            background: #1a1a25;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0e0ff;
+            max-height: 250px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .code-output strong {
+            color: #00ff88;
+        }
+
+        .code-output .highlight {
+            color: #ffcc00;
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .operators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .boxes-container {
+                gap: 5px;
+            }
+
+            .box {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8em;
+            }
+
+            .scope-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .function-flow {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .ternary-flow {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .string-operations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .big-number {
+                font-size: 3em;
+            }
+
+            .var-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .data-types-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .conversion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .template-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .json-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== SOCIAL MEDIA HEADER ==================== -->
+    <div class="social-header">
+        <div class="social-header-content">
+            <div class="name">Rahul Nagar</div>
+            <div class="project-title">JavaScript Logic Visualizer</div>
+            <div class="social-links">
+                <a href="https://github.com/rahulnagartech" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <div class="divider"></div>
+                <a href="https://www.linkedin.com/in/rahul-nagar-5636752a9" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <div class="divider"></div>
+                <a href="https://www.instagram.com/rahul_techexpert" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <div class="divider"></div>
+                <a href="https://www.facebook.com/rahultechexpert" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ==================== HEADER ==================== -->
+        <div class="header">
+            <h1>🚀 JavaScript Logic Visualizer</h1>
+            <p>Learn loops, conditions, and operators through interactive animations</p>
+        </div>
+
+        <!-- ==================== SECTION 1: FOR LOOP ==================== -->
+        <div class="section">
+            <h2>For Loop Visualization</h2>
+            <p>A FOR LOOP runs a block of code a specific number of times. Watch as we count from 0 to 9:</p>
+            
+            <div class="speed-control">
+                <label for="forLoopSpeed">Animation Speed:</label>
+                <input type="range" id="forLoopSpeed" class="speed-slider" min="100" max="1000" value="500" step="100">
+                <span class="speed-value" id="forLoopSpeedValue">500ms</span>
+            </div>
+
+            <div class="visualization">
+                <div class="boxes-container" id="forLoopBoxes"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button onclick="startForLoop()">▶ Start Loop</button>
+                <button class="secondary" onclick="resetForLoop()">↻ Reset</button>
+            </div>
+
+            <div class="explanation" id="forLoopExplanation">
+                Click "Start Loop" to begin. Each box represents one iteration (lap) of the loop.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 2: WHILE LOOP ==================== -->
+        <div class="section">
+            <h2>While Loop Visualization</h2>
+            <p>A WHILE LOOP runs as long as a condition is TRUE. This bar decreases while value > 0:</p>
+
+            <div class="speed-control">
+                <label for="whileLoopSpeed">Animation Speed:</label>
+                <input type="range" id="whileLoopSpeed" class="speed-slider" min="100" max="1000" value="500" step="100">
+                <span class="speed-value" id="whileLoopSpeedValue">500ms</span>
+            </div>
+
+            <div class="visualization">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="whileProgressFill" style="width: 100%;">
+                            <span id="whileProgressText">10</span>
+                        </div>
+                    </div>
+                    <div class="value-display" id="whileValueDisplay">value = 10</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button onclick="startWhileLoop()">▶ Start Loop</button>
+                <button class="secondary" onclick="resetWhileLoop()">↻ Reset</button>
+            </div>
+
+            <div class="explanation" id="whileLoopExplanation">
+                Click "Start Loop" to begin. The loop continues while (value > 0).
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 3: IF-ELSE CONDITIONS ==================== -->
+        <div class="section">
+            <h2>If-Else Conditions</h2>
+            <p>IF-ELSE statements test a condition and run different code based on the result:</p>
+
+            <p style="margin: 20px 0; text-align: center; font-size: 1.1em;">
+                Click a button and see what message and color appears:
+            </p>
+
+            <div class="traffic-light-container">
+                <button class="light-button red" onclick="checkCondition('red')">
+                    🔴<br>Red Button<br>(Stop)
+                </button>
+                <button class="light-button yellow" onclick="checkCondition('yellow')">
+                    🟡<br>Yellow Button<br>(Slow Down)
+                </button>
+                <button class="light-button green" onclick="checkCondition('green')">
+                    🟢<br>Green Button<br>(Go)
+                </button>
+            </div>
+
+            <div class="explanation" id="conditionExplanation">
+                Click one of the colored buttons to see how if-else conditions work.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 4: OPERATORS ==================== -->
+        <div class="section">
+            <h2>Operators Visualizer</h2>
+            <p>OPERATORS perform operations on values. Enter two numbers to see results:</p>
+
+            <div class="operator-input-group">
+                <label>A:</label>
+                <input type="number" class="input-field" id="operatorA" value="10" oninput="updateOperators()">
+                <label>B:</label>
+                <input type="number" class="input-field" id="operatorB" value="3" oninput="updateOperators()">
+            </div>
+
+            <p style="margin: 20px 0; font-weight: bold; color: #00d4ff;">📊 Arithmetic Operators:</p>
+            <div class="operators-grid" id="arithmeticOperators"></div>
+
+            <p style="margin: 20px 0; font-weight: bold; color: #00d4ff;">🔍 Comparison Operators (A compared with B):</p>
+            <div class="operators-grid" id="comparisonOperators"></div>
+
+            <p style="margin: 20px 0; font-weight: bold; color: #00d4ff;">⚡ Logical Operators:</p>
+            <div class="operators-grid" id="logicalOperators"></div>
+        </div>
+
+        <!-- ==================== SECTION 5: EVEN/ODD CHECK ==================== -->
+        <div class="section">
+            <h2>Even / Odd Check (Loop + Condition)</h2>
+            <p>This section combines loops and conditions. Boxes are colored based on whether their index is EVEN or ODD:</p>
+
+            <div class="speed-control">
+                <label for="evenOddSpeed">Animation Speed:</label>
+                <input type="range" id="evenOddSpeed" class="speed-slider" min="100" max="1000" value="500" step="100">
+                <span class="speed-value" id="evenOddSpeedValue">500ms</span>
+            </div>
+
+            <div class="visualization">
+                <div class="boxes-container" id="evenOddBoxes"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button onclick="startEvenOddCheck()">▶ Start Check</button>
+                <button class="secondary" onclick="resetEvenOddCheck()">↻ Reset</button>
+            </div>
+
+            <div class="explanation" id="evenOddExplanation">
+                Click "Start Check" to begin. Boxes will turn GREEN if index is even, RED if odd.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 6: SWITCH STATEMENT ==================== -->
+        <div class="section">
+            <h2>Switch Statement</h2>
+            <p>A SWITCH statement tests ONE value against MANY cases. Choose a fruit to see what switch does:</p>
+
+            <div class="switch-buttons-container">
+                <button class="switch-btn" onclick="testSwitch('apple')">🍎 Apple</button>
+                <button class="switch-btn" onclick="testSwitch('banana')">🍌 Banana</button>
+                <button class="switch-btn" onclick="testSwitch('grape')">🍇 Grape</button>
+                <button class="switch-btn" onclick="testSwitch('orange')">🍊 Orange</button>
+                <button class="switch-btn" onclick="testSwitch('unknown')">❓ Unknown</button>
+            </div>
+
+            <div class="visualization">
+                <div class="switch-result" id="switchResult">
+                    <div class="result-emoji" id="switchEmoji"></div>
+                    <div class="result-text" id="switchText">Select a fruit to see the switch statement work</div>
+                </div>
+            </div>
+
+            <div class="explanation" id="switchExplanation">
+                <strong>Code Structure:</strong><br>
+                switch (fruit) {<br>
+                &nbsp;&nbsp;case 'apple': console.log('Apple is red'); break;<br>
+                &nbsp;&nbsp;case 'banana': console.log('Banana is yellow'); break;<br>
+                &nbsp;&nbsp;case 'grape': console.log('Grape is purple'); break;<br>
+                &nbsp;&nbsp;default: console.log('Unknown fruit');<br>
+                }
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 7: ARRAY METHODS ==================== -->
+        <div class="section">
+            <h2>Array Methods (forEach, map, filter)</h2>
+            <p>ARRAYS store multiple values. These methods help you work with all values in an array:</p>
+
+            <div style="margin: 20px 0;">
+                <p style="margin-bottom: 15px; color: #00d4ff;"><strong>Original Array:</strong> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateForEach()">📋 forEach()</button>
+                <button onclick="demonstrateMap()">🔄 map()</button>
+                <button onclick="demonstrateFilter()">🔍 filter()</button>
+                <button class="secondary" onclick="resetArrayMethods()">↻ Reset</button>
+            </div>
+
+            <div class="visualization">
+                <div class="array-boxes-container" id="arrayMethodBoxes"></div>
+            </div>
+
+            <div class="explanation" id="arrayMethodExplanation">
+                Click a button to see how array methods process data step by step.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 8: FUNCTION WITH RETURN VALUE ==================== -->
+        <div class="section">
+            <h2>Functions and Return Values</h2>
+            <p>FUNCTIONS are reusable blocks of code. They can take INPUT (parameters) and give OUTPUT (return value):</p>
+
+            <div class="function-demo-container">
+                <div style="margin: 20px 0;">
+                    <p style="color: #00d4ff; margin-bottom: 10px;"><strong>Function:</strong> function add(x, y) { return x + y; }</p>
+                    
+                    <div class="function-input-group">
+                        <label>First Number (x):</label>
+                        <input type="number" class="input-field" id="funcX" value="5" oninput="updateFunctionDemo()">
+                        <label>Second Number (y):</label>
+                        <input type="number" class="input-field" id="funcY" value="3" oninput="updateFunctionDemo()">
+                    </div>
+                </div>
+
+                <div class="visualization">
+                    <div class="function-flow">
+                        <div class="flow-box input-box">
+                            <div class="flow-label">Input (Parameters)</div>
+                            <div class="flow-value" id="funcInputDisplay">x = 5, y = 3</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box process-box">
+                            <div class="flow-label">Function Process</div>
+                            <div class="flow-value" id="funcProcessDisplay">x + y</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box output-box">
+                            <div class="flow-label">Return (Output)</div>
+                            <div class="flow-value" id="funcOutputDisplay">8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="functionExplanation">
+                Change the input numbers to see how functions process values and return results.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 9: TERNARY OPERATOR ==================== -->
+        <div class="section">
+            <h2>Ternary Operator (? :)</h2>
+            <p>The TERNARY operator is a quick way to make a decision: condition ? valueIfTrue : valueIfFalse</p>
+
+            <div style="margin: 20px 0;">
+                <p style="color: #00d4ff; margin-bottom: 10px;"><strong>Example:</strong> age >= 18 ? "You can vote" : "Too young to vote"</p>
+            </div>
+
+            <div class="function-input-group">
+                <label>Enter your age:</label>
+                <input type="number" class="input-field" id="ageInput" value="20" oninput="updateTernaryDemo()">
+            </div>
+
+            <div class="visualization">
+                <div class="ternary-flow">
+                    <div class="ternary-box">
+                        <div class="ternary-condition" id="ternaryCondition">age = 20</div>
+                        <div class="ternary-test" id="ternaryTest">20 >= 18 → TRUE</div>
+                    </div>
+                    <div class="ternary-box result-box">
+                        <div class="ternary-label">Result:</div>
+                        <div class="ternary-result" id="ternaryResult">✅ You can vote!</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="ternaryExplanation">
+                Change the age to see how the ternary operator evaluates the condition and returns different results.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 10: VARIABLE SCOPE ==================== -->
+        <div class="section">
+            <h2>Variable Scope (Global vs Local)</h2>
+            <p>SCOPE determines where a variable can be used. Global variables are available everywhere, local variables only in their function:</p>
+
+            <div style="margin: 20px 0;">
+                <button onclick="demonstrateGlobalVariable()">🌐 Global Scope</button>
+                <button onclick="demonstrateLocalVariable()">📦 Local Scope</button>
+                <button class="secondary" onclick="resetScopeDemo()">↻ Reset</button>
+            </div>
+
+            <div class="visualization">
+                <div class="scope-diagram">
+                    <div class="scope-block global-scope" id="globalScope">
+                        <div class="scope-title">🌍 Global Scope</div>
+                        <div class="scope-content" id="globalScopeContent">
+                            <div class="scope-var">globalVar = "I'm everywhere!"</div>
+                        </div>
+                    </div>
+                    <div class="scope-block local-scope" id="localScope">
+                        <div class="scope-title">📦 Local Scope (Function)</div>
+                        <div class="scope-content" id="localScopeContent">
+                            <div class="scope-var">localVar = "Only in function"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="scopeExplanation">
+                Click a button to see how global and local variables work differently.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 11: STRING OPERATIONS ==================== -->
+        <div class="section">
+            <h2>String Operations</h2>
+            <p>STRINGS are text. You can combine them, find parts, and change them:</p>
+
+            <div class="function-input-group">
+                <label>Enter text:</label>
+                <input type="text" class="input-field" id="stringInput" value="JavaScript" oninput="updateStringOperations()" style="width: 200px;">
+            </div>
+
+            <div class="string-operations-grid" id="stringOperationsGrid"></div>
+
+            <div class="explanation" id="stringExplanation">
+                Type something in the input field to see different string operations work on it.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 12: COUNTDOWN TIMER ==================== -->
+        <div class="section">
+            <h2>Recursion & Loop Control (Countdown)</h2>
+            <p>This combines loops with timing. A COUNTDOWN shows how loops can control timing in real applications:</p>
+
+            <div class="speed-control">
+                <label for="countdownSpeed">Countdown Start:</label>
+                <input type="range" id="countdownSeconds" class="speed-slider" min="3" max="10" value="5" step="1">
+                <span class="speed-value" id="countdownValue">5</span>
+            </div>
+
+            <div class="visualization">
+                <div class="countdown-display" id="countdownDisplay">
+                    <div class="big-number" id="countdownNumber">5</div>
+                    <div class="countdown-status" id="countdownStatus">Ready?</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button onclick="startCountdown()">⏱️ Start Countdown</button>
+                <button class="secondary" onclick="resetCountdown()">↻ Reset</button>
+            </div>
+
+            <div class="explanation" id="countdownExplanation">
+                Click "Start Countdown" to see a loop-based countdown with timing control.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 13: VARIABLES (VAR, LET, CONST) ==================== -->
+        <div class="section">
+            <h2>Variables: var, let, const</h2>
+            <p>Variables store data. JavaScript has 3 ways to declare them with different rules:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateVar()">var (Old Way)</button>
+                <button onclick="demonstrateLet()">let (Modern)</button>
+                <button onclick="demonstrateConst()">const (Constant)</button>
+            </div>
+
+            <div class="visualization">
+                <div class="var-comparison" id="varComparison">
+                    <div class="var-card">
+                        <h3 style="color: #ff6b9d;">var</h3>
+                        <p>Function Scoped, can be redeclared, can change value</p>
+                    </div>
+                    <div class="var-card">
+                        <h3 style="color: #00d4ff;">let</h3>
+                        <p>Block Scoped, cannot be redeclared, can change value</p>
+                    </div>
+                    <div class="var-card">
+                        <h3 style="color: #00ff88;">const</h3>
+                        <p>Block Scoped, cannot be redeclared, cannot change value</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="varExplanation">
+                Click a button to see how var, let, and const behave differently.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 14: DATA TYPES ==================== -->
+        <div class="section">
+            <h2>JavaScript Data Types</h2>
+            <p>JavaScript has different data types: Primitives and Objects</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showDataTypes()">📊 Show All Types</button>
+            </div>
+
+            <div class="visualization">
+                <div class="data-types-grid" id="dataTypesGrid"></div>
+            </div>
+
+            <div class="explanation" id="dataTypesExplanation">
+                JavaScript has 8 main data types. Click the button to see examples of each.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 15: TYPE CONVERSION ==================== -->
+        <div class="section">
+            <h2>Type Conversion & Coercion</h2>
+            <p>Converting values from one type to another. Explicit (intentional) or implicit (automatic):</p>
+
+            <div class="function-input-group">
+                <label>Value to convert:</label>
+                <input type="text" class="input-field" id="conversionInput" value="42" oninput="updateConversion()" style="width: 150px;">
+            </div>
+
+            <div class="visualization">
+                <div class="conversion-grid" id="conversionGrid"></div>
+            </div>
+
+            <div class="explanation" id="conversionExplanation">
+                Type conversion lets you change data types. Try entering different values!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 16: TEMPLATE LITERALS ==================== -->
+        <div class="section">
+            <h2>Template Literals</h2>
+            <p>Template literals use backticks (`) and allow variables inside ${} - much cleaner than concatenation!</p>
+
+            <div class="function-input-group">
+                <label>Name:</label>
+                <input type="text" class="input-field" id="userName" value="JavaScript" oninput="updateTemplateLiterals()" style="width: 150px;">
+                <label>Age:</label>
+                <input type="number" class="input-field" id="userAge" value="25" oninput="updateTemplateLiterals()" style="width: 100px;">
+            </div>
+
+            <div class="visualization">
+                <div class="template-comparison">
+                    <div class="template-card">
+                        <div class="template-label">Old Way (Concatenation):</div>
+                        <div class="template-code" id="oldWayCode"></div>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-label">New Way (Template Literal):</div>
+                        <div class="template-code" id="newWayCode"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="templateExplanation">
+                Template literals are cleaner and more readable than string concatenation.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 17: OBJECTS ==================== -->
+        <div class="section">
+            <h2>Objects</h2>
+            <p>Objects store multiple properties (key-value pairs). They're like real-world things with properties.</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="createObject()">Create Object</button>
+                <button onclick="accessProperties()">Access Properties</button>
+                <button onclick="modifyObject()">Modify Object</button>
+            </div>
+
+            <div class="visualization">
+                <div class="object-display" id="objectDisplay"></div>
+            </div>
+
+            <div class="explanation" id="objectExplanation">
+                Click buttons to see how objects work and how to access/modify their properties.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 18: HOISTING ==================== -->
+        <div class="section">
+            <h2>Hoisting</h2>
+            <p>Hoisting moves declarations to the top. var and function declarations are hoisted, but let/const are not.</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateHoisting()">📤 Hoisting Behavior</button>
+            </div>
+
+            <div class="visualization">
+                <div class="hoisting-demo" id="hoistingDemo"></div>
+            </div>
+
+            <div class="explanation" id="hoistingExplanation">
+                Hoisting is JavaScript moving declarations to the top of their scope. See the difference between var and let!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 19: CLOSURES ==================== -->
+        <div class="section">
+            <h2>Closures</h2>
+            <p>A closure is a function that remembers variables from outside its scope. Powerful for data privacy!</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="createClosure()">Create Closure</button>
+                <button onclick="incrementCounter()">Add 1</button>
+                <button onclick="resetClosureDemo()">Reset</button>
+            </div>
+
+            <div class="visualization">
+                <div class="closure-display" id="closureDisplay"></div>
+            </div>
+
+            <div class="explanation" id="closureExplanation">
+                Closures let functions remember data. Click "Create Closure" then "Add 1" multiple times to see it working!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 20: CALLBACKS ==================== -->
+        <div class="section">
+            <h2>Callbacks</h2>
+            <p>A callback is a function passed to another function. Useful for handling async operations.</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="executeWithCallback()">Execute With Callback</button>
+            </div>
+
+            <div class="visualization">
+                <div class="callback-display" id="callbackDisplay"></div>
+            </div>
+
+            <div class="explanation" id="callbackExplanation">
+                Click to see a callback in action. The greeting function is passed as a callback to another function.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 21: HIGHER ORDER FUNCTIONS ==================== -->
+        <div class="section">
+            <h2>Higher Order Functions</h2>
+            <p>Functions that take other functions as parameters OR return functions. Array methods like map/filter are HOFs!</p>
+
+            <div class="function-input-group">
+                <label>Number:</label>
+                <input type="number" class="input-field" id="hofInput" value="5" oninput="updateHOF()" style="width: 100px;">
+            </div>
+
+            <div class="visualization">
+                <div class="hof-results" id="hofResults"></div>
+            </div>
+
+            <div class="explanation" id="hofExplanation">
+                Higher order functions are very powerful. Try different numbers to see the results change!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 22: REDUCE METHOD ==================== -->
+        <div class="section">
+            <h2>Array Reduce (Transform to Single Value)</h2>
+            <p>Reduce combines all array items into one value. Sum, product, or any accumulation!</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateSum()">➕ Sum Array</button>
+                <button onclick="demonstrateProduct()">✖️ Multiply Array</button>
+                <button onclick="demonstrateConcat()">🔗 Concat Strings</button>
+            </div>
+
+            <div class="visualization">
+                <div class="reduce-display" id="reduceDisplay"></div>
+            </div>
+
+            <div class="explanation" id="reduceExplanation">
+                Array: [1, 2, 3, 4, 5]. Click buttons to reduce it to different values using reduce()!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 23: PROMISES ==================== -->
+        <div class="section">
+            <h2>Promises</h2>
+            <p>A Promise represents a value that will exist in the future. States: Pending → Resolved OR Rejected</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrisePromise(true)">✅ Resolve Promise</button>
+                <button onclick="demonstrisePromise(false)">❌ Reject Promise</button>
+            </div>
+
+            <div class="visualization">
+                <div class="promise-display" id="promiseDisplay"></div>
+            </div>
+
+            <div class="explanation" id="promiseExplanation">
+                Promises handle async operations. See how they resolve or reject!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 24: ASYNC/AWAIT ==================== -->
+        <div class="section">
+            <h2>Async/Await</h2>
+            <p>Async/await makes working with promises easier and cleaner. Async functions return promises!</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateAsyncAwait()">⚡ Run Async Function</button>
+            </div>
+
+            <div class="visualization">
+                <div class="async-display" id="asyncDisplay"></div>
+            </div>
+
+            <div class="explanation" id="asyncExplanation">
+                Async/await is syntactic sugar for promises. Click to see async operations with delays!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 25: ERROR HANDLING ==================== -->
+        <div class="section">
+            <h2>Error Handling (Try/Catch/Finally)</h2>
+            <p>Handle errors gracefully with try/catch/finally. Prevents code from breaking!</p>
+
+            <div class="function-input-group">
+                <label>Number to divide 10 by:</label>
+                <input type="number" class="input-field" id="divisionInput" value="2" oninput="updateDivision()" style="width: 100px;">
+            </div>
+
+            <div class="visualization">
+                <div class="error-display" id="errorDisplay"></div>
+            </div>
+
+            <div class="explanation" id="errorExplanation">
+                Try dividing by 0! Try/catch prevents errors from breaking your code.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 26: DOM MANIPULATION ==================== -->
+        <div class="section">
+            <h2>DOM Manipulation</h2>
+            <p>DOM (Document Object Model) lets you select and change HTML elements with JavaScript.</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="selectElement()">📌 Select Element</button>
+                <button onclick="changeElement()">✏️ Change Element</button>
+                <button onclick="createElement()">➕ Create Element</button>
+            </div>
+
+            <div class="visualization">
+                <div class="dom-demo" id="domDemo">
+                    <div id="demoElement" style="padding: 20px; background: #1a1a25; border: 2px solid #00d4ff; border-radius: 8px; margin: 10px 0; text-align: center;">
+                        I am a DOM element!
+                    </div>
+                    <div id="createdElements"></div>
+                </div>
+            </div>
+
+            <div class="explanation" id="domExplanation">
+                Click buttons to select, change, or create DOM elements!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 27: EVENTS ==================== -->
+        <div class="section">
+            <h2>Events</h2>
+            <p>Events are things that happen in the browser (click, hover, type, etc). React to them with event listeners!</p>
+
+            <div style="margin: 20px 0;">
+                <input type="text" class="input-field" id="eventInput" placeholder="Type here to see events!" style="width: 100%; max-width: 400px;">
+                <button id="eventButton" onclick="handleEventClick()" style="margin-top: 10px;">Click Me!</button>
+            </div>
+
+            <div class="visualization">
+                <div class="event-log" id="eventLog"></div>
+            </div>
+
+            <div class="explanation" id="eventExplanation">
+                Type in the input and click the button to see events being triggered!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 28: LOCAL STORAGE ==================== -->
+        <div class="section">
+            <h2>Local Storage</h2>
+            <p>Local Storage saves data in the browser. Even after closing the page, the data persists!</p>
+
+            <div class="function-input-group">
+                <label>Key:</label>
+                <input type="text" class="input-field" id="storageKey" value="username" style="width: 150px;">
+                <label>Value:</label>
+                <input type="text" class="input-field" id="storageValue" value="John" style="width: 150px;">
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="saveToStorage()">💾 Save</button>
+                <button onclick="loadFromStorage()">📂 Load</button>
+                <button onclick="removeFromStorage()">🗑️ Remove</button>
+            </div>
+
+            <div class="visualization">
+                <div class="storage-display" id="storageDisplay"></div>
+            </div>
+
+            <div class="explanation" id="storageExplanation">
+                Local Storage data persists even after closing the browser. Save and reload the page to test!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 29: JSON ==================== -->
+        <div class="section">
+            <h2>JSON (JavaScript Object Notation)</h2>
+            <p>JSON is a standard format for exchanging data. Stringify (object → JSON) or Parse (JSON → object):</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateJSON()">🔄 Object ↔ JSON</button>
+            </div>
+
+            <div class="visualization">
+                <div class="json-comparison">
+                    <div class="json-card">
+                        <div class="json-label">JavaScript Object:</div>
+                        <div class="json-display" id="jsonObject"></div>
+                    </div>
+                    <div class="json-card">
+                        <div class="json-label">JSON String:</div>
+                        <div class="json-display" id="jsonString"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation" id="jsonExplanation">
+                JSON is used to send data between servers and browsers. Click to see conversion!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 30: INTERNAL VS EXTERNAL JS ==================== -->
+        <div class="section">
+            <h2>Internal vs External JavaScript</h2>
+            <p>JavaScript can be written inline, internal (in &lt;script&gt; tags), or external (separate .js file):</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showInternalJS()">📝 Internal JS</button>
+                <button onclick="showExternalJS()">📄 External JS</button>
+                <button onclick="showInlineJS()">⌨️ Inline JS</button>
+            </div>
+
+            <div class="visualization">
+                <div class="js-method-display" id="jsMethodDisplay"></div>
+            </div>
+
+            <div class="explanation" id="jsMethodExplanation">
+                Click buttons to see examples of how JavaScript can be included in HTML.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 29: OOP IN JAVASCRIPT ==================== -->
+        <div class="section">
+            <h2>OOP in JavaScript (Classes)</h2>
+            <p>Object-Oriented Programming with ES6 Classes. Create reusable objects with properties and methods:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateClass()">🏗️ Create Class</button>
+                <button onclick="demonstrateInheritance()">👨‍👩‍👧 Inheritance</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="classOutput"></div>
+            </div>
+
+            <div class="explanation" id="classExplanation">
+                Click to see how ES6 classes work and how to use inheritance!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 31: PROTOTYPES ==================== -->
+        <div class="section">
+            <h2>Prototypes</h2>
+            <p>Prototypes are the foundation of inheritance in JavaScript. Every object has a prototype chain:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstratePrototype()">🔗 Prototype Chain</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="prototypeOutput"></div>
+            </div>
+
+            <div class="explanation" id="prototypeExplanation">
+                Prototypes allow objects to inherit properties and methods from other objects.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 32: THIS KEYWORD ==================== -->
+        <div class="section">
+            <h2>this Keyword</h2>
+            <p>The value of 'this' depends on HOW a function is called. It can refer to different objects:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateThis()">🎯 this in Different Contexts</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="thisOutput"></div>
+            </div>
+
+            <div class="explanation" id="thisExplanation">
+                'this' is a special keyword that refers to the current object context.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 33: BIND, CALL, APPLY ==================== -->
+        <div class="section">
+            <h2>bind, call, apply</h2>
+            <p>Control what 'this' refers to with bind, call, and apply methods:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateCallApply()">📞 call() vs apply()</button>
+                <button onclick="demonstrateBind()">🔐 bind()</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="callApplyOutput"></div>
+            </div>
+
+            <div class="explanation" id="callApplyExplanation">
+                call, apply, and bind let you control the 'this' context in function calls.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 34: CURRYING ==================== -->
+        <div class="section">
+            <h2>Currying</h2>
+            <p>Currying transforms a function with multiple arguments into nested functions with single arguments:</p>
+
+            <div class="function-input-group">
+                <label>X:</label>
+                <input type="number" class="input-field" id="curryX" value="3" oninput="updateCurrying()" style="width: 80px;">
+                <label>Y:</label>
+                <input type="number" class="input-field" id="curryY" value="4" oninput="updateCurrying()" style="width: 80px;">
+                <label>Z:</label>
+                <input type="number" class="input-field" id="curryZ" value="5" oninput="updateCurrying()" style="width: 80px;">
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="curryOutput"></div>
+            </div>
+
+            <div class="explanation" id="curryExplanation">
+                Currying is functional programming technique for creating specialized functions.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 35: MEMOIZATION ==================== -->
+        <div class="section">
+            <h2>Memoization (Caching Results)</h2>
+            <p>Cache function results to avoid recalculating expensive operations:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateMemoization()">💾 Memoization Demo</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="memoOutput"></div>
+            </div>
+
+            <div class="explanation" id="memoExplanation">
+                Memoization improves performance by remembering previous results.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 36: FETCH API ==================== -->
+        <div class="section">
+            <h2>Fetch API (HTTP Requests)</h2>
+            <p>Fetch API makes HTTP requests to get data from servers. Modern replacement for XMLHttpRequest:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateFetch()">🌐 Fetch Data</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="fetchOutput"></div>
+            </div>
+
+            <div class="explanation" id="fetchExplanation">
+                Fetch is used to get data from APIs and servers asynchronously.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 37: DEBOUNCING & THROTTLING ==================== -->
+        <div class="section">
+            <h2>Debouncing & Throttling</h2>
+            <p>Control how often functions execute. Useful for performance optimization:</p>
+
+            <div class="function-input-group">
+                <label>Type to test (will debounce):</label>
+                <input type="text" class="input-field" id="debounceInput" placeholder="Type fast..." style="width: 250px;">
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="debounceOutput"></div>
+            </div>
+
+            <div class="explanation" id="debounceExplanation">
+                Debounce delays execution until user stops. Throttle limits execution frequency.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 38: GENERATORS & ITERATORS ==================== -->
+        <div class="section">
+            <h2>Generators & Iterators</h2>
+            <p>Generators use function* and yield to create custom iteration patterns:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="demonstrateGenerators()">🔄 Generator Example</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="generatorOutput"></div>
+            </div>
+
+            <div class="explanation" id="generatorExplanation">
+                Generators let you pause and resume function execution with yield.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 39: FUNCTIONAL PROGRAMMING ==================== -->
+        <div class="section">
+            <h2>Functional Programming Basics</h2>
+            <p>Functional programming uses pure functions, immutability, and composition:</p>
+
+            <div class="function-input-group">
+                <label>Number:</label>
+                <input type="number" class="input-field" id="fpInput" value="5" oninput="updateFunctionalProgramming()" style="width: 100px;">
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="fpOutput"></div>
+            </div>
+
+            <div class="explanation" id="fpExplanation">
+                Functional programming focuses on pure functions and avoiding side effects.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 40: BROWSER RENDERING ==================== -->
+        <div class="section">
+            <h2>Browser Rendering Pipeline</h2>
+            <p>How browsers parse HTML, CSS, and JavaScript to render pages:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showRenderingPipeline()">📺 Rendering Steps</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="renderingOutput"></div>
+            </div>
+
+            <div class="explanation" id="renderingExplanation">
+                Understanding rendering helps you optimize web performance.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 41: PERFORMANCE OPTIMIZATION ==================== -->
+        <div class="section">
+            <h2>Performance Optimization</h2>
+            <p>Techniques to make web applications faster and more efficient:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showPerformanceTips()">⚡ Performance Tips</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="performanceOutput"></div>
+            </div>
+
+            <div class="explanation" id="performanceExplanation">
+                Use these techniques to optimize your JavaScript and reduce load times.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 42: SECURITY ==================== -->
+        <div class="section">
+            <h2>JavaScript Security</h2>
+            <p>Common security vulnerabilities and how to prevent them:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showSecurityTips()">🔒 Security Best Practices</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="securityOutput"></div>
+            </div>
+
+            <div class="explanation" id="securityExplanation">
+                Always sanitize user input and follow security best practices!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 43: DESIGN PATTERNS ==================== -->
+        <div class="section">
+            <h2>JavaScript Design Patterns</h2>
+            <p>Reusable solutions to common programming problems:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showDesignPatterns()">🎨 Common Patterns</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="patternsOutput"></div>
+            </div>
+
+            <div class="explanation" id="patternsExplanation">
+                Design patterns help organize code and solve common problems.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 44: TESTING (JEST) ==================== -->
+        <div class="section">
+            <h2>Testing with Jest</h2>
+            <p>Writing unit tests to verify your code works correctly:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showTestingExample()">✅ Testing Example</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="testingOutput"></div>
+            </div>
+
+            <div class="explanation" id="testingExplanation">
+                Tests ensure code reliability and catch bugs early!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 45: BUILD TOOLS ==================== -->
+        <div class="section">
+            <h2>Build Tools (Webpack, Vite, Babel)</h2>
+            <p>Tools that transform, bundle, and optimize your code for production:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showBuildTools()">🔧 Build Tools Overview</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="buildOutput"></div>
+            </div>
+
+            <div class="explanation" id="buildExplanation">
+                Build tools are essential for modern web development.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 46: TYPESCRIPT ==================== -->
+        <div class="section">
+            <h2>TypeScript Basics</h2>
+            <p>TypeScript adds type safety to JavaScript. Superset of JavaScript with static types:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showTypeScriptExample()">📘 TypeScript Example</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="tsOutput"></div>
+            </div>
+
+            <div class="explanation" id="tsExplanation">
+                TypeScript catches errors at compile time instead of runtime!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 47: NODE.JS ==================== -->
+        <div class="section">
+            <h2>Node.js (Server-side JavaScript)</h2>
+            <p>Run JavaScript outside the browser on servers with Node.js:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showNodeJsBasics()">🖥️ Node.js Basics</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="nodeOutput"></div>
+            </div>
+
+            <div class="explanation" id="nodeExplanation">
+                Node.js lets you use JavaScript for backend development!
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 48: EXPRESS.JS ==================== -->
+        <div class="section">
+            <h2>Express.js (Web Framework)</h2>
+            <p>Popular Node.js framework for building web servers and APIs:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showExpressExample()">🚀 Express Server</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="expressOutput"></div>
+            </div>
+
+            <div class="explanation" id="expressExplanation">
+                Express simplifies building RESTful APIs and web servers.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 49: AUTHENTICATION (JWT) ==================== -->
+        <div class="section">
+            <h2>Authentication with JWT</h2>
+            <p>JSON Web Tokens for secure user authentication:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showJWTExample()">🔐 JWT Authentication</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="jwtOutput"></div>
+            </div>
+
+            <div class="explanation" id="jwtExplanation">
+                JWT is a standard way to create secure authentication tokens.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 50: API DESIGN ==================== -->
+        <div class="section">
+            <h2>RESTful API Design</h2>
+            <p>Principles for designing good APIs that are easy to use and maintain:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showAPIDesign()">🏗️ REST Principles</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="apiOutput"></div>
+            </div>
+
+            <div class="explanation" id="apiExplanation">
+                Good API design makes your services easy to use and scale.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 51: REAL-TIME APPS ==================== -->
+        <div class="section">
+            <h2>Real-time Applications (WebSockets)</h2>
+            <p>Build real-time apps with WebSocket for instant communication:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showWebSockets()">⚡ WebSocket Communication</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="wsOutput"></div>
+            </div>
+
+            <div class="explanation" id="wsExplanation">
+                WebSockets enable real-time bidirectional communication.
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 52: MICROSERVICES ==================== -->
+        <div class="section">
+            <h2>Microservices Architecture</h2>
+            <p>Breaking apps into small, independent services that work together:</p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0;">
+                <button onclick="showMicroservices()">🔀 Microservices Pattern</button>
+            </div>
+
+            <div class="visualization">
+                <div class="code-output" id="microOutput"></div>
+            </div>
+
+            <div class="explanation" id="microExplanation">
+                Microservices allow scalable, maintainable application architecture.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== GLOBAL STATE ==================== 
+        // These variables keep track of what's happening in each visualization
+
+        let forLoopRunning = false;
+        let whileLoopRunning = false;
+        let evenOddRunning = false;
+
+        // ==================== SECTION 1: FOR LOOP ==================== 
+        
+        // Create 10 boxes for the for loop visualization
+        function initForLoopBoxes() {
+            const container = document.getElementById('forLoopBoxes');
+            container.innerHTML = ''; // Clear old boxes
+            
+            // Create 10 boxes numbered 0-9
+            for (let i = 0; i < 10; i++) {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.textContent = i;
+                box.id = 'forBox' + i;
+                container.appendChild(box);
+            }
+        }
+
+        // Get animation speed from slider
+        function getForLoopSpeed() {
+            return parseInt(document.getElementById('forLoopSpeed').value);
+        }
+
+        // Run the for loop animation
+        async function startForLoop() {
+            if (forLoopRunning) return; // Prevent running multiple times at once
+            
+            forLoopRunning = true;
+            resetForLoop(); // Clear previous animation
+            
+            // Simulate: for (let i = 0; i < 10; i++)
+            for (let i = 0; i < 10; i++) {
+                // Highlight current box
+                const box = document.getElementById('forBox' + i);
+                box.classList.add('active');
+                
+                // Update explanation with what's happening
+                document.getElementById('forLoopExplanation').textContent = 
+                    `Iteration: i = ${i} | Condition (i < 10) is ${i < 10 ? 'TRUE' : 'FALSE'} | Showing box ${i}`;
+                
+                // Wait before moving to next iteration
+                const speed = getForLoopSpeed();
+                await sleep(speed);
+                
+                // Remove highlight from current box
+                box.classList.remove('active');
+            }
+            
+            // Loop finished
+            document.getElementById('forLoopExplanation').textContent = 
+                '✅ Loop finished! All 10 iterations completed (i went from 0 to 9).';
+            forLoopRunning = false;
+        }
+
+        // Reset the for loop visualization
+        function resetForLoop() {
+            forLoopRunning = false;
+            const container = document.getElementById('forLoopBoxes');
+            container.querySelectorAll('.box').forEach(box => {
+                box.classList.remove('active');
+            });
+            document.getElementById('forLoopExplanation').textContent = 
+                'Click "Start Loop" to begin. Each box represents one iteration (lap) of the loop.';
+        }
+
+        // Update speed value display when slider changes
+        document.getElementById('forLoopSpeed').addEventListener('input', function() {
+            document.getElementById('forLoopSpeedValue').textContent = this.value + 'ms';
+        });
+
+        // ==================== SECTION 2: WHILE LOOP ==================== 
+
+        // Get animation speed from slider
+        function getWhileLoopSpeed() {
+            return parseInt(document.getElementById('whileLoopSpeed').value);
+        }
+
+        // Run the while loop animation
+        async function startWhileLoop() {
+            if (whileLoopRunning) return;
+            
+            whileLoopRunning = true;
+            resetWhileLoop();
+            
+            // Simulate: while (value > 0)
+            let value = 10;
+            
+            while (value > 0) {
+                // Update progress bar
+                const percentage = (value / 10) * 100;
+                document.getElementById('whileProgressFill').style.width = percentage + '%';
+                document.getElementById('whileProgressText').textContent = value;
+                document.getElementById('whileValueDisplay').textContent = 'value = ' + value;
+                
+                // Update explanation
+                document.getElementById('whileLoopExplanation').textContent = 
+                    `Current value: ${value} | Condition (value > 0) is ${value > 0 ? 'TRUE' : 'FALSE'} | Decreasing by 1...`;
+                
+                // Wait before next iteration
+                const speed = getWhileLoopSpeed();
+                await sleep(speed);
+                
+                // Decrease value (simulating value--)
+                value--;
+            }
+            
+            // Loop finished
+            document.getElementById('whileLoopExplanation').textContent = 
+                '✅ Loop finished! Value reached 0 and condition became FALSE.';
+            document.getElementById('whileValueDisplay').textContent = 'value = ' + value;
+            whileLoopRunning = false;
+        }
+
+        // Reset the while loop visualization
+        function resetWhileLoop() {
+            whileLoopRunning = false;
+            document.getElementById('whileProgressFill').style.width = '100%';
+            document.getElementById('whileProgressText').textContent = '10';
+            document.getElementById('whileValueDisplay').textContent = 'value = 10';
+            document.getElementById('whileLoopExplanation').textContent = 
+                'Click "Start Loop" to begin. The loop continues while (value > 0).';
+        }
+
+        // Update speed value display
+        document.getElementById('whileLoopSpeed').addEventListener('input', function() {
+            document.getElementById('whileLoopSpeedValue').textContent = this.value + 'ms';
+        });
+
+        // ==================== SECTION 3: IF-ELSE CONDITIONS ==================== 
+
+        // Check the condition based on button clicked
+        function checkCondition(color) {
+            // Remove previous active state from all buttons
+            document.querySelectorAll('.light-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Create the result message based on the color
+            let message = '';
+            let conditionText = '';
+            
+            if (color === 'red') {
+                message = '🛑 STOP! Red means STOP.';
+                conditionText = 'if (color === "red") { console.log("STOP") }';
+            } else if (color === 'yellow') {
+                message = '⚠️ SLOW DOWN! Yellow means CAUTION.';
+                conditionText = 'else if (color === "yellow") { console.log("SLOW DOWN") }';
+            } else if (color === 'green') {
+                message = '✅ GO! Green means GO.';
+                conditionText = 'else { console.log("GO") }';
+            }
+            
+            // Show result with animation
+            const explanation = document.getElementById('conditionExplanation');
+            explanation.textContent = message + ' | Code: ' + conditionText;
+            explanation.classList.add('pulse');
+            
+            // Highlight the clicked button
+            document.querySelector('.light-button.' + color).classList.add('active');
+            
+            // Remove pulse animation after it finishes
+            setTimeout(() => {
+                explanation.classList.remove('pulse');
+            }, 600);
+        }
+
+        // ==================== SECTION 4: OPERATORS ==================== 
+
+        // Initialize operators display
+        function initOperators() {
+            updateOperators();
+        }
+
+        // Update operators display when user changes input
+        function updateOperators() {
+            let a = parseFloat(document.getElementById('operatorA').value) || 0;
+            let b = parseFloat(document.getElementById('operatorB').value) || 0;
+            
+            // Arithmetic Operators
+            const arithmeticOps = [
+                { symbol: '+', result: a + b },
+                { symbol: '-', result: a - b },
+                { symbol: '*', result: a * b },
+                { symbol: '/', result: b !== 0 ? (a / b).toFixed(2) : 'undefined' }
+            ];
+            
+            const arithmeticContainer = document.getElementById('arithmeticOperators');
+            arithmeticContainer.innerHTML = '';
+            arithmeticOps.forEach(op => {
+                arithmeticContainer.innerHTML += `
+                    <div class="operator-card">
+                        <div>${a} <span class="op">${op.symbol}</span> ${b}</div>
+                        <div class="result">= ${op.result}</div>
+                    </div>
+                `;
+            });
+            
+            // Comparison Operators
+            const comparisonOps = [
+                { symbol: '>', result: a > b },
+                { symbol: '<', result: a < b },
+                { symbol: '==', result: a == b },
+                { symbol: '===', result: a === b }
+            ];
+            
+            const comparisonContainer = document.getElementById('comparisonOperators');
+            comparisonContainer.innerHTML = '';
+            comparisonOps.forEach(op => {
+                comparisonContainer.innerHTML += `
+                    <div class="operator-card">
+                        <div>${a} <span class="op">${op.symbol}</span> ${b}</div>
+                        <div class="result">${op.result ? '✅ TRUE' : '❌ FALSE'}</div>
+                    </div>
+                `;
+            });
+            
+            // Logical Operators
+            const logicalOps = [
+                { symbol: '!', result: !a, description: 'NOT' },
+                { symbol: '&&', result: (a > 0 && b > 0), description: 'AND (both > 0)' },
+                { symbol: '||', result: (a > 0 || b > 0), description: 'OR (at least one > 0)' }
+            ];
+            
+            const logicalContainer = document.getElementById('logicalOperators');
+            logicalContainer.innerHTML = '';
+            logicalOps.forEach(op => {
+                logicalContainer.innerHTML += `
+                    <div class="operator-card">
+                        <div><span class="op">${op.symbol}</span> ${op.description}</div>
+                        <div class="result">${op.result ? '✅ TRUE' : '❌ FALSE'}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==================== SECTION 5: EVEN/ODD CHECK ==================== 
+
+        // Create boxes for even/odd visualization
+        function initEvenOddBoxes() {
+            const container = document.getElementById('evenOddBoxes');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 10; i++) {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.textContent = i;
+                box.id = 'evenOddBox' + i;
+                container.appendChild(box);
+            }
+        }
+
+        // Get animation speed
+        function getEvenOddSpeed() {
+            return parseInt(document.getElementById('evenOddSpeed').value);
+        }
+
+        // Run even/odd check animation
+        async function startEvenOddCheck() {
+            if (evenOddRunning) return;
+            
+            evenOddRunning = true;
+            resetEvenOddCheck();
+            
+            // Loop through each box and check if index is even or odd
+            for (let i = 0; i < 10; i++) {
+                const box = document.getElementById('evenOddBox' + i);
+                
+                // Check if i is even or odd using modulo operator (%)
+                if (i % 2 === 0) {
+                    // Even: i % 2 equals 0
+                    box.classList.add('even');
+                    document.getElementById('evenOddExplanation').textContent = 
+                        `Index i = ${i} | ${i} % 2 = 0 | This is EVEN, so turning GREEN ✅`;
+                } else {
+                    // Odd: i % 2 equals 1
+                    box.classList.add('odd');
+                    document.getElementById('evenOddExplanation').textContent = 
+                        `Index i = ${i} | ${i} % 2 = 1 | This is ODD, so turning RED ❌`;
+                }
+                
+                const speed = getEvenOddSpeed();
+                await sleep(speed);
+            }
+            
+            document.getElementById('evenOddExplanation').textContent = 
+                '✅ Check finished! Even indices are GREEN, odd indices are RED.';
+            evenOddRunning = false;
+        }
+
+        // Reset even/odd visualization
+        function resetEvenOddCheck() {
+            evenOddRunning = false;
+            document.getElementById('evenOddBoxes').querySelectorAll('.box').forEach(box => {
+                box.classList.remove('even', 'odd');
+            });
+            document.getElementById('evenOddExplanation').textContent = 
+                'Click "Start Check" to begin. Boxes will turn GREEN if index is even, RED if odd.';
+        }
+
+        // Update speed display
+        document.getElementById('evenOddSpeed').addEventListener('input', function() {
+            document.getElementById('evenOddSpeedValue').textContent = this.value + 'ms';
+        });
+
+        // ==================== UTILITY FUNCTIONS ==================== 
+
+        // Helper function: Sleep for a certain milliseconds
+        // Used to create animation delays
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ==================== SECTION 6: SWITCH STATEMENT ==================== 
+
+        // Test the switch statement
+        function testSwitch(fruit) {
+            let emoji = '';
+            let message = '';
+            let caseInfo = '';
+
+            switch (fruit) {
+                case 'apple':
+                    emoji = '🍎';
+                    message = 'Apple is a red fruit';
+                    caseInfo = "case 'apple': Red and sweet!";
+                    break;
+                case 'banana':
+                    emoji = '🍌';
+                    message = 'Banana is yellow and soft';
+                    caseInfo = "case 'banana': Yellow and potassium-rich!";
+                    break;
+                case 'grape':
+                    emoji = '🍇';
+                    message = 'Grapes are purple and small';
+                    caseInfo = "case 'grape': Purple and juicy!";
+                    break;
+                case 'orange':
+                    emoji = '🍊';
+                    message = 'Orange is a citrus fruit';
+                    caseInfo = "case 'orange': Orange and vitamin C!";
+                    break;
+                default:
+                    emoji = '❓';
+                    message = 'I don\'t know this fruit!';
+                    caseInfo = "default: Unknown fruit";
+            }
+
+            // Update display
+            document.getElementById('switchEmoji').textContent = emoji;
+            document.getElementById('switchText').textContent = message;
+            document.getElementById('switchExplanation').textContent = 'Selected: ' + caseInfo;
+        }
+
+        // ==================== SECTION 7: ARRAY METHODS ==================== 
+
+        // Initialize array method boxes
+        function initArrayMethodBoxes() {
+            const container = document.getElementById('arrayMethodBoxes');
+            container.innerHTML = '';
+            
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            numbers.forEach((num, index) => {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.textContent = num;
+                box.id = 'arrayBox' + index;
+                container.appendChild(box);
+            });
+        }
+
+        // Demonstrate forEach
+        async function demonstrateForEach() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            resetArrayMethods();
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                'forEach: This method visits each item in the array';
+
+            // Simulate: numbers.forEach((num, i) => {})
+            for (let i = 0; i < numbers.length; i++) {
+                const box = document.getElementById('arrayBox' + i);
+                box.classList.add('active');
+                
+                document.getElementById('arrayMethodExplanation').textContent = 
+                    `forEach visiting index ${i}, value = ${numbers[i]}`;
+                
+                await sleep(400);
+                box.classList.remove('active');
+            }
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                '✅ forEach finished! Visited all 10 items.';
+        }
+
+        // Demonstrate map (doubles each number)
+        async function demonstrateMap() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            resetArrayMethods();
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                'map: This method transforms each item. Here we multiply by 2.';
+
+            for (let i = 0; i < numbers.length; i++) {
+                const box = document.getElementById('arrayBox' + i);
+                const newValue = numbers[i] * 2;
+                
+                box.classList.add('active');
+                box.textContent = newValue;
+                
+                document.getElementById('arrayMethodExplanation').textContent = 
+                    `map: ${numbers[i]} × 2 = ${newValue}`;
+                
+                await sleep(400);
+                box.classList.remove('active');
+            }
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                '✅ map finished! All values doubled.';
+        }
+
+        // Demonstrate filter (only even numbers)
+        async function demonstrateFilter() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            resetArrayMethods();
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                'filter: This method keeps only items that pass a test. Here: numbers > 5.';
+
+            for (let i = 0; i < numbers.length; i++) {
+                const box = document.getElementById('arrayBox' + i);
+                const passes = numbers[i] > 5;
+                
+                if (passes) {
+                    box.classList.add('active');
+                    document.getElementById('arrayMethodExplanation').textContent = 
+                        `filter: ${numbers[i]} > 5? YES ✅ (Keep it)`;
+                } else {
+                    box.style.opacity = '0.3';
+                    document.getElementById('arrayMethodExplanation').textContent = 
+                        `filter: ${numbers[i]} > 5? NO ❌ (Remove it)`;
+                }
+                
+                await sleep(400);
+            }
+
+            document.getElementById('arrayMethodExplanation').textContent = 
+                '✅ filter finished! Kept only numbers greater than 5.';
+        }
+
+        // Reset array method visualization
+        function resetArrayMethods() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            numbers.forEach((num, index) => {
+                const box = document.getElementById('arrayBox' + index);
+                if (box) {
+                    box.classList.remove('active');
+                    box.textContent = num;
+                    box.style.opacity = '1';
+                }
+            });
+            document.getElementById('arrayMethodExplanation').textContent = 
+                'Click a button to see how array methods work.';
+        }
+
+        // ==================== SECTION 8: FUNCTION RETURN VALUE ==================== 
+
+        // Update function demonstration
+        function updateFunctionDemo() {
+            const x = parseFloat(document.getElementById('funcX').value) || 0;
+            const y = parseFloat(document.getElementById('funcY').value) || 0;
+            const result = x + y;
+
+            document.getElementById('funcInputDisplay').textContent = `x = ${x}, y = ${y}`;
+            document.getElementById('funcProcessDisplay').textContent = `${x} + ${y}`;
+            document.getElementById('funcOutputDisplay').textContent = result;
+
+            document.getElementById('functionExplanation').textContent = 
+                `When you call add(${x}, ${y}), the function returns ${result}. The function RETURNS this value.`;
+        }
+
+        // ==================== SECTION 9: TERNARY OPERATOR ==================== 
+
+        // Update ternary demonstration
+        function updateTernaryDemo() {
+            const age = parseInt(document.getElementById('ageInput').value) || 0;
+            const canVote = age >= 18;
+            const result = canVote ? "✅ You can vote!" : "❌ Too young to vote";
+            const explanation = canVote ? "TRUE" : "FALSE";
+
+            document.getElementById('ternaryCondition').textContent = `age = ${age}`;
+            document.getElementById('ternaryTest').textContent = `${age} >= 18 → ${explanation}`;
+            document.getElementById('ternaryResult').textContent = result;
+
+            document.getElementById('ternaryExplanation').textContent = 
+                `Ternary: condition ? valueIfTrue : valueIfFalse | Result: ${result}`;
+        }
+
+        // ==================== SECTION 10: VARIABLE SCOPE ==================== 
+
+        // Global variable (defined outside functions, available everywhere)
+        let globalVar = "I'm globally available!";
+
+        // Demonstrate global scope
+        function demonstrateGlobalVariable() {
+            globalVar = "✅ Global: Accessible from anywhere!";
+            document.getElementById('globalScopeContent').innerHTML = 
+                `<div class="scope-var">${globalVar}</div>`;
+            document.getElementById('scopeExplanation').textContent = 
+                'Global variables are declared outside functions and can be used in any function or anywhere in the code.';
+        }
+
+        // Demonstrate local scope
+        function demonstrateLocalVariable() {
+            // Local variable (defined inside function, only available inside function)
+            let localVar = "✅ Local: Only available in this function!";
+            
+            document.getElementById('localScopeContent').innerHTML = 
+                `<div class="scope-var">${localVar}</div><br><div style="color: #ff6b9d; font-size: 0.85em; margin-top: 10px;">❌ Cannot access outside this function</div>`;
+            
+            document.getElementById('scopeExplanation').textContent = 
+                'Local variables are declared inside a function and can ONLY be used inside that function. They cannot be accessed from outside!';
+        }
+
+        // Reset scope demo
+        function resetScopeDemo() {
+            document.getElementById('globalScopeContent').innerHTML = 
+                '<div class="scope-var">globalVar = "I\'m everywhere!"</div>';
+            document.getElementById('localScopeContent').innerHTML = 
+                '<div class="scope-var">localVar = "Only in function"</div>';
+            document.getElementById('scopeExplanation').textContent = 
+                'Click a button to see how global and local variables work differently.';
+        }
+
+        // ==================== SECTION 11: STRING OPERATIONS ==================== 
+
+        // Update string operations
+        function updateStringOperations() {
+            const str = document.getElementById('stringInput').value || 'JavaScript';
+            
+            const operations = [
+                { name: 'length', result: str.length },
+                { name: 'toUpperCase()', result: str.toUpperCase() },
+                { name: 'toLowerCase()', result: str.toLowerCase() },
+                { name: 'charAt(0)', result: str.charAt(0) },
+                { name: 'substring(0,4)', result: str.substring(0, 4) },
+                { name: 'includes("Script")', result: str.includes('Script') ? 'TRUE' : 'FALSE' },
+                { name: 'indexOf("a")', result: str.indexOf('a') },
+                { name: 'concat(" Rules")', result: str + ' Rules' }
+            ];
+
+            const container = document.getElementById('stringOperationsGrid');
+            container.innerHTML = '';
+
+            operations.forEach(op => {
+                container.innerHTML += `
+                    <div class="operator-card">
+                        <div class="op">"${str}".${op.name}</div>
+                        <div class="result">${op.result}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('stringExplanation').textContent = 
+                `String Operations: Working on "${str}" (length: ${str.length})`;
+        }
+
+        // ==================== SECTION 12: COUNTDOWN ==================== 
+
+        let countdownRunning = false;
+
+        // Update countdown display value
+        document.getElementById('countdownSeconds').addEventListener('input', function() {
+            document.getElementById('countdownValue').textContent = this.value;
+            document.getElementById('countdownNumber').textContent = this.value;
+        });
+
+        // Start countdown
+        async function startCountdown() {
+            if (countdownRunning) return;
+            countdownRunning = true;
+
+            let count = parseInt(document.getElementById('countdownSeconds').value) || 5;
+            const originalCount = count;
+
+            while (count > 0) {
+                document.getElementById('countdownNumber').textContent = count;
+                document.getElementById('countdownStatus').textContent = 'Counting down...';
+                document.getElementById('countdownExplanation').textContent = 
+                    `while (${count} > 0) { count-- } | Current: ${count}`;
+                
+                await sleep(1000);
+                count--;
+            }
+
+            // Finished
+            document.getElementById('countdownNumber').textContent = '🎉';
+            document.getElementById('countdownStatus').textContent = 'Blastoff!';
+            document.getElementById('countdownExplanation').textContent = 
+                `✅ Countdown finished! Counted from ${originalCount} to 0.`;
+
+            countdownRunning = false;
+        }
+
+        // Reset countdown
+        function resetCountdown() {
+            countdownRunning = false;
+            const initialValue = document.getElementById('countdownSeconds').value;
+            document.getElementById('countdownNumber').textContent = initialValue;
+            document.getElementById('countdownStatus').textContent = 'Ready?';
+            document.getElementById('countdownExplanation').textContent = 
+                'Click "Start Countdown" to see a loop-based countdown with timing control.';
+        }
+
+        // ==================== SECTION 13: VARIABLES (VAR, LET, CONST) ==================== 
+
+        function demonstrateVar() {
+            document.getElementById('varExplanation').innerHTML = `
+                <strong>var x = 5;</strong><br>
+                ✅ Can be redeclared: var x = 10; (OK)<br>
+                ✅ Can be changed: x = 15; (OK)<br>
+                ⚠️ Function scoped (not block scoped)<br>
+                ⚠️ Hoisted and initialized as undefined
+            `;
+        }
+
+        function demonstrateLet() {
+            document.getElementById('varExplanation').innerHTML = `
+                <strong>let x = 5;</strong><br>
+                ❌ Cannot be redeclared: let x = 10; (ERROR)<br>
+                ✅ Can be changed: x = 15; (OK)<br>
+                ✅ Block scoped (safer)<br>
+                ⚠️ Hoisted but NOT initialized
+            `;
+        }
+
+        function demonstrateConst() {
+            document.getElementById('varExplanation').innerHTML = `
+                <strong>const x = 5;</strong><br>
+                ❌ Cannot be redeclared: const x = 10; (ERROR)<br>
+                ❌ Cannot be changed: x = 15; (ERROR)<br>
+                ✅ Block scoped (safest)<br>
+                ✅ Must be initialized when declared<br>
+                💡 Use const by default!
+            `;
+        }
+
+        // ==================== SECTION 14: DATA TYPES ==================== 
+
+        function showDataTypes() {
+            const types = [
+                { name: 'String', value: '"JavaScript"' },
+                { name: 'Number', value: '42' },
+                { name: 'Boolean', value: 'true' },
+                { name: 'Undefined', value: 'undefined' },
+                { name: 'Null', value: 'null' },
+                { name: 'Symbol', value: 'Symbol()' },
+                { name: 'BigInt', value: '123n' },
+                { name: 'Object', value: '{name: "JS"}' }
+            ];
+
+            const container = document.getElementById('dataTypesGrid');
+            container.innerHTML = '';
+            types.forEach(type => {
+                container.innerHTML += `
+                    <div class="data-type-card">
+                        <div class="data-type-name">${type.name}</div>
+                        <div class="data-type-value">${type.value}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('dataTypesExplanation').textContent = 
+                '✅ 8 data types in JavaScript! First 7 are primitives, rest are objects.';
+        }
+
+        // ==================== SECTION 15: TYPE CONVERSION ==================== 
+
+        function updateConversion() {
+            const input = document.getElementById('conversionInput').value;
+            
+            const conversions = [
+                { name: 'String', result: String(input) },
+                { name: 'Number', result: Number(input) },
+                { name: 'Boolean', result: Boolean(input) },
+                { name: 'parseInt', result: parseInt(input) },
+                { name: 'parseFloat', result: parseFloat(input) }
+            ];
+
+            const container = document.getElementById('conversionGrid');
+            container.innerHTML = '';
+            conversions.forEach(conv => {
+                container.innerHTML += `
+                    <div class="operator-card">
+                        <div class="op">${conv.name}()</div>
+                        <div class="result">${conv.result}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('conversionExplanation').textContent = 
+                `Converting "${input}" to different types...`;
+        }
+
+        // ==================== SECTION 16: TEMPLATE LITERALS ==================== 
+
+        function updateTemplateLiterals() {
+            const name = document.getElementById('userName').value;
+            const age = document.getElementById('userAge').value;
+
+            const oldWay = `"Hello " + name + ", you are " + age + " years old"`;
+            const newWay = `\`Hello \${name}, you are \${age} years old\``;
+
+            const result1 = `Hello ${name}, you are ${age} years old`;
+            const result2 = result1; // Same result!
+
+            document.getElementById('oldWayCode').textContent = 
+                oldWay + '\n\n✅ Result: "' + result1 + '"';
+            document.getElementById('newWayCode').textContent = 
+                newWay + '\n\n✅ Result: "' + result2 + '"';
+
+            document.getElementById('templateExplanation').textContent = 
+                'Both produce the same result, but template literals are cleaner and easier to read!';
+        }
+
+        // ==================== SECTION 17: OBJECTS ==================== 
+
+        const car = {};
+
+        function createObject() {
+            window.car = {
+                brand: 'Toyota',
+                model: 'Camry',
+                year: 2023,
+                color: 'Blue',
+                drive: function() { return 'Driving...'; }
+            };
+
+            displayObject();
+            document.getElementById('objectExplanation').textContent = 
+                '✅ Object created with properties: brand, model, year, color, and drive() method.';
+        }
+
+        function accessProperties() {
+            const info = `
+                car.brand = "${car.brand}"<br>
+                car['model'] = "${car['model']}"<br>
+                car.year = ${car.year}<br>
+                car.drive() = "${car.drive()}"
+            `;
+            document.getElementById('objectDisplay').innerHTML = info;
+            document.getElementById('objectExplanation').textContent = 
+                'Access properties with dot notation (car.brand) or bracket notation (car["brand"])';
+        }
+
+        function modifyObject() {
+            car.year = 2024;
+            car.newProperty = 'Added!';
+            displayObject();
+            document.getElementById('objectExplanation').textContent = 
+                '✅ Modified year to 2024 and added newProperty!';
+        }
+
+        function displayObject() {
+            const display = `<strong>Car Object:</strong><br><br>` + 
+                JSON.stringify(car, null, 2).replace(/"/g, '').replace(/,/g, ',<br>');
+            document.getElementById('objectDisplay').innerHTML = display;
+        }
+
+        // ==================== SECTION 18: HOISTING ==================== 
+
+        function demonstrateHoisting() {
+            let display = `
+                <strong>❌ With var:</strong><br>
+                console.log(x); // undefined (hoisted but not initialized)<br>
+                var x = 5;<br>
+                console.log(x); // 5<br>
+                <br>
+                <strong>✅ With let:</strong><br>
+                console.log(y); // ReferenceError (Temporal Dead Zone)<br>
+                let y = 5;<br>
+                <br>
+                <strong>💡 Solution: declare before using!</strong>
+            `;
+            document.getElementById('hoistingDemo').innerHTML = display;
+            document.getElementById('hoistingExplanation').textContent = 
+                'var gets hoisted, let does not. Always declare variables at the top!';
+        }
+
+        // ==================== SECTION 19: CLOSURES ==================== 
+
+        let counter = 0;
+        let counterFunc = null;
+
+        function createClosure() {
+            let count = 0; // Private variable
+            
+            window.counterFunc = function() {
+                count++;
+                return count;
+            };
+
+            document.getElementById('closureDisplay').textContent = '✅ Closure created! Click "Add 1" to increment.';
+            document.getElementById('closureExplanation').textContent = 
+                'A closure remembers the count variable. Each click increments it. Try clicking!';
+            updateClosureDisplay();
+        }
+
+        function incrementCounter() {
+            if (!counterFunc) {
+                document.getElementById('closureExplanation').textContent = 'Click "Create Closure" first!';
+                return;
+            }
+            updateClosureDisplay();
+        }
+
+        function updateClosureDisplay() {
+            if (counterFunc) {
+                const newCount = counterFunc();
+                document.getElementById('closureDisplay').textContent = 'Count: ' + newCount;
+            }
+        }
+
+        function resetClosureDemo() {
+            counterFunc = null;
+            document.getElementById('closureDisplay').textContent = 'Closure reset.';
+            document.getElementById('closureExplanation').textContent = 
+                'Click "Create Closure" then "Add 1" multiple times to see it working!';
+        }
+
+        // ==================== SECTION 20: CALLBACKS ==================== 
+
+        function executeWithCallback() {
+            function greeting(name) {
+                return `Hello, ${name}! 👋`;
+            }
+
+            function greet(firstName, callback) {
+                const message = callback(firstName);
+                document.getElementById('callbackDisplay').textContent = message;
+            }
+
+            greet('JavaScript', greeting);
+            document.getElementById('callbackExplanation').textContent = 
+                'The greeting function was passed as a callback to greet(). Callbacks are used for async operations!';
+        }
+
+        // ==================== SECTION 21: HIGHER ORDER FUNCTIONS ==================== 
+
+        function updateHOF() {
+            const num = parseInt(document.getElementById('hofInput').value) || 0;
+
+            // HOF 1: Function that returns a function
+            function multiply(factor) {
+                return function(x) {
+                    return x * factor;
+                };
+            }
+
+            // HOF 2: Function that takes a function
+            function applyTwice(func, value) {
+                return func(func(value));
+            }
+
+            const double = multiply(2);
+            const quadruple = applyTwice(multiply(2), num);
+
+            let display = `
+                <strong>Input:</strong> ${num}<br><br>
+                <strong>multiply(2):</strong> ${double(num)}<br>
+                <strong>applyTwice(multiply(2), ${num}):</strong> ${quadruple}<br><br>
+                <strong>Higher Order Functions = Powerful!</strong>
+            `;
+
+            document.getElementById('hofResults').innerHTML = display;
+            document.getElementById('hofExplanation').textContent = 
+                'HOFs take functions as input or return functions. Very powerful for composition!';
+        }
+
+        // ==================== SECTION 22: REDUCE METHOD ==================== 
+
+        const numbers = [1, 2, 3, 4, 5];
+
+        function demonstrateSum() {
+            const sum = numbers.reduce((acc, num) => acc + num, 0);
+            document.getElementById('reduceDisplay').innerHTML = `
+                <strong>Array:</strong> [1, 2, 3, 4, 5]<br><br>
+                <strong>.reduce((acc, num) => acc + num, 0)</strong><br><br>
+                <strong>Result: ${sum}</strong><br>
+                <span style="color: #a0a0a0; font-size: 0.9em;">acc = accumulator (running total)</span>
+            `;
+            document.getElementById('reduceExplanation').textContent = 
+                '✅ Sum: 1+2+3+4+5 = 15. Reduce combines all values!';
+        }
+
+        function demonstrateProduct() {
+            const product = numbers.reduce((acc, num) => acc * num, 1);
+            document.getElementById('reduceDisplay').innerHTML = `
+                <strong>Array:</strong> [1, 2, 3, 4, 5]<br><br>
+                <strong>.reduce((acc, num) => acc * num, 1)</strong><br><br>
+                <strong>Result: ${product}</strong><br>
+                <span style="color: #a0a0a0; font-size: 0.9em;">Starting with 1</span>
+            `;
+            document.getElementById('reduceExplanation').textContent = 
+                '✅ Product: 1×2×3×4×5 = 120. Same function, different operation!';
+        }
+
+        function demonstrateConcat() {
+            const words = ['JavaScript', 'is', 'awesome'];
+            const sentence = words.reduce((acc, word) => acc + ' ' + word);
+            document.getElementById('reduceDisplay').innerHTML = `
+                <strong>Array:</strong> ["JavaScript", "is", "awesome"]<br><br>
+                <strong>.reduce((acc, word) => acc + ' ' + word)</strong><br><br>
+                <strong>Result: "${sentence}"</strong>
+            `;
+            document.getElementById('reduceExplanation').textContent = 
+                '✅ Concatenated words into a sentence. Reduce is very flexible!';
+        }
+
+        // ==================== SECTION 23: PROMISES ==================== 
+
+        function demonstrisePromise(shouldResolve) {
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (shouldResolve) {
+                        resolve('✅ Promise resolved successfully!');
+                    } else {
+                        reject('❌ Promise rejected!');
+                    }
+                }, 1000);
+            });
+
+            document.getElementById('promiseDisplay').innerHTML = `
+                <div class="promise-state">⏳ Pending...</div>
+                <div style="color: #a0a0a0;">Waiting for promise...</div>
+            `;
+
+            promise
+                .then(result => {
+                    document.getElementById('promiseDisplay').innerHTML = `
+                        <div class="promise-state">Resolved</div>
+                        <div class="promise-value">${result}</div>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('promiseDisplay').innerHTML = `
+                        <div class="promise-state">Rejected</div>
+                        <div class="promise-value">${error}</div>
+                    `;
+                });
+        }
+
+        // ==================== SECTION 24: ASYNC/AWAIT ==================== 
+
+        async function demonstrateAsyncAwait() {
+            document.getElementById('asyncDisplay').innerHTML = '<div class="async-step">⏳ Step 1: Starting async function...</div>';
+
+            // Simulate step 1
+            await sleep(1000);
+            document.getElementById('asyncDisplay').innerHTML += '<div class="async-step">✅ Step 1 Complete</div>';
+
+            // Simulate step 2
+            await sleep(1000);
+            document.getElementById('asyncDisplay').innerHTML += '<div class="async-step">⏳ Step 2: Processing data...</div>';
+
+            // Simulate step 3
+            await sleep(1000);
+            document.getElementById('asyncDisplay').innerHTML += '<div class="async-step">✅ All Done!</div>';
+
+            document.getElementById('asyncExplanation').textContent = 
+                '⏱️ Each step waited 1 second. Async/await makes async code look synchronous!';
+        }
+
+        // ==================== SECTION 25: ERROR HANDLING ==================== 
+
+        function updateDivision() {
+            const divisor = parseFloat(document.getElementById('divisionInput').value) || 0;
+
+            try {
+                if (divisor === 0) {
+                    throw new Error('Cannot divide by zero!');
+                }
+                const result = 10 / divisor;
+                document.getElementById('errorDisplay').innerHTML = `
+                    <strong class="error-success">✅ Success!</strong><br>
+                    10 ÷ ${divisor} = ${result}
+                `;
+            } catch (error) {
+                document.getElementById('errorDisplay').innerHTML = `
+                    <strong class="error-caught">❌ Error Caught!</strong><br>
+                    ${error.message}
+                `;
+            } finally {
+                document.getElementById('errorExplanation').textContent = 
+                    'Try/catch prevents crashes. Finally always runs (cleanup code).';
+            }
+        }
+
+        // ==================== SECTION 26: DOM MANIPULATION ==================== 
+
+        function selectElement() {
+            const elem = document.getElementById('demoElement');
+            elem.style.backgroundColor = '#00d4ff';
+            elem.style.color = '#1e1e2e';
+            document.getElementById('domExplanation').textContent = 
+                '✅ Selected element with getElementById() and changed its style!';
+        }
+
+        function changeElement() {
+            const elem = document.getElementById('demoElement');
+            elem.textContent = '✏️ Element Changed!';
+            elem.style.backgroundColor = '#00ff88';
+            elem.style.color = '#1e1e2e';
+            document.getElementById('domExplanation').textContent = 
+                'Changed the element text content and background color!';
+        }
+
+        function createElement() {
+            const newDiv = document.createElement('div');
+            newDiv.textContent = '✨ New Element Created!';
+            newDiv.style.padding = '15px';
+            newDiv.style.margin = '10px 0';
+            newDiv.style.background = '#ff6b9d';
+            newDiv.style.borderRadius = '6px';
+            newDiv.style.color = 'white';
+            
+            document.getElementById('createdElements').appendChild(newDiv);
+            document.getElementById('domExplanation').textContent = 
+                'Created a new element with createElement() and added it to the page!';
+        }
+
+        // ==================== SECTION 27: EVENTS ==================== 
+
+        let eventCount = 0;
+
+        function handleEventClick() {
+            eventCount++;
+            const log = document.getElementById('eventLog');
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.textContent = `Click #${eventCount} at ${new Date().toLocaleTimeString()}`;
+            log.appendChild(item);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Track input events
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventInput = document.getElementById('eventInput');
+            if (eventInput) {
+                eventInput.addEventListener('input', function() {
+                    const log = document.getElementById('eventLog');
+                    if (log) {
+                        const item = document.createElement('div');
+                        item.className = 'event-item';
+                        item.textContent = `Typed: "${this.value}"`;
+                        log.appendChild(item);
+                        log.scrollTop = log.scrollHeight;
+                    }
+                });
+            }
+        });
+
+        // ==================== SECTION 28: LOCAL STORAGE ==================== 
+
+        function saveToStorage() {
+            const key = document.getElementById('storageKey').value;
+            const value = document.getElementById('storageValue').value;
+            localStorage.setItem(key, value);
+            displayStorage();
+            document.getElementById('storageExplanation').textContent = 
+                `✅ Saved "${key}": "${value}" to Local Storage!`;
+        }
+
+        function loadFromStorage() {
+            const key = document.getElementById('storageKey').value;
+            const value = localStorage.getItem(key);
+            if (value) {
+                document.getElementById('storageValue').value = value;
+                document.getElementById('storageExplanation').textContent = 
+                    `✅ Loaded from Local Storage!`;
+            } else {
+                document.getElementById('storageExplanation').textContent = 
+                    `❌ Key "${key}" not found in Local Storage!`;
+            }
+            displayStorage();
+        }
+
+        function removeFromStorage() {
+            const key = document.getElementById('storageKey').value;
+            localStorage.removeItem(key);
+            displayStorage();
+            document.getElementById('storageExplanation').textContent = 
+                `✅ Removed "${key}" from Local Storage!`;
+        }
+
+        function displayStorage() {
+            const display = document.getElementById('storageDisplay');
+            display.innerHTML = '<strong>Stored Items:</strong><br>';
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                display.innerHTML += `<div class="storage-item">"${key}": "${value}"</div>`;
+            }
+
+            if (localStorage.length === 0) {
+                display.innerHTML += '<div class="storage-item" style="color: #a0a0a0;">No items stored yet</div>';
+            }
+        }
+
+        // ==================== SECTION 29: JSON ==================== 
+
+        function demonstrateJSON() {
+            const person = {
+                name: 'JavaScript',
+                age: 25,
+                skills: ['Loops', 'Functions', 'Promises'],
+                isAwesome: true
+            };
+
+            const jsonString = JSON.stringify(person, null, 2);
+            const parsed = JSON.parse(jsonString);
+
+            document.getElementById('jsonObject').textContent = JSON.stringify(person, null, 2);
+            document.getElementById('jsonString').textContent = jsonString;
+
+            document.getElementById('jsonExplanation').textContent = 
+                'JSON is text! stringify() → JSON, parse() → Object. Used for APIs!';
+        }
+
+        // ==================== SECTION 30: INTERNAL VS EXTERNAL JS ==================== 
+
+        function showInternalJS() {
+            document.getElementById('jsMethodDisplay').innerHTML = `
+                <strong>&lt;!DOCTYPE html&gt;</strong><br>
+                <strong>&lt;html&gt;</strong><br>
+                &nbsp;&nbsp;<strong>&lt;script&gt;</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;// Code goes here<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log('Internal JS');<br>
+                &nbsp;&nbsp;<strong>&lt;/script&gt;</strong><br>
+                <strong>&lt;/html&gt;</strong><br><br>
+                ✅ <strong>Pros:</strong> No extra file, quick<br>
+                ❌ <strong>Cons:</strong> Hard to reuse, mixes code with HTML
+            `;
+            document.getElementById('jsMethodExplanation').textContent = 
+                'Internal JS: Written inside <script> tags in HTML file.';
+        }
+
+        function showExternalJS() {
+            document.getElementById('jsMethodDisplay').innerHTML = `
+                <strong>HTML File:</strong><br>
+                &lt;script src="script.js"&gt;&lt;/script&gt;<br><br>
+                <strong>script.js File:</strong><br>
+                console.log('External JS');<br><br>
+                ✅ <strong>Pros:</strong> Reusable, clean separation, better caching<br>
+                ✅ <strong>Cons:</strong> Extra HTTP request (minor issue)
+            `;
+            document.getElementById('jsMethodExplanation').textContent = 
+                'External JS: Code in separate .js file, linked in HTML. BEST PRACTICE!';
+        }
+
+        function showInlineJS() {
+            document.getElementById('jsMethodDisplay').innerHTML = `
+                <strong>&lt;button onclick="alert('Clicked!')"&gt;Click&lt;/button&gt;</strong><br><br>
+                ✅ <strong>Pros:</strong> Immediate, no extra file<br>
+                ❌ <strong>Cons:</strong> Bad practice, hard to maintain, mixes concerns
+            `;
+            document.getElementById('jsMethodExplanation').textContent = 
+                'Inline JS: Written directly in HTML attributes. AVOID THIS!';
+        }
+
+        // ==================== SECTION 29: OOP IN JAVASCRIPT ==================== 
+
+        function demonstrateClass() {
+            document.getElementById('classOutput').innerHTML = `
+                <strong>class Car {</strong><br>
+                &nbsp;&nbsp;constructor(brand) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;this.brand = brand;<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;drive() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return \`Driving \${this.brand}\`;<br>
+                &nbsp;&nbsp;}<br>
+                <strong>}</strong><br><br>
+                const myCar = new Car('Toyota');<br>
+                <span class="highlight">myCar.drive() → "Driving Toyota"</span>
+            `;
+            document.getElementById('classExplanation').textContent = 
+                '✅ Classes organize code with properties (data) and methods (functions)!';
+        }
+
+        function demonstrateInheritance() {
+            document.getElementById('classOutput').innerHTML = `
+                <strong>class Vehicle { move() { } }</strong><br>
+                <strong>class Car extends Vehicle {</strong><br>
+                &nbsp;&nbsp;honk() { return '🔊 Beep!'; }<br>
+                <strong>}</strong><br><br>
+                const car = new Car();<br>
+                <span class="highlight">car.honk() → "🔊 Beep!"</span><br>
+                <span class="highlight">car.move() → inherited!</span>
+            `;
+            document.getElementById('classExplanation').textContent = 
+                '✅ Inheritance lets child classes reuse parent class methods!';
+        }
+
+        // ==================== SECTION 31: PROTOTYPES ==================== 
+
+        function demonstratePrototype() {
+            document.getElementById('prototypeOutput').innerHTML = `
+                <strong>function Animal(name) {</strong><br>
+                &nbsp;&nbsp;this.name = name;<br>
+                <strong>}</strong><br>
+                Animal.prototype.speak = () => '...';<br><br>
+                const dog = new Animal('Rex');<br>
+                <span class="highlight">dog.speak() → found in prototype!</span><br>
+                <span class="highlight">dog.name → "Rex" (own property)</span>
+            `;
+            document.getElementById('prototypeExplanation').textContent = 
+                '✅ Prototypes enable inheritance and method sharing!';
+        }
+
+        // ==================== SECTION 32: THIS KEYWORD ==================== 
+
+        function demonstrateThis() {
+            document.getElementById('thisOutput').innerHTML = `
+                <strong>const obj = {</strong><br>
+                &nbsp;&nbsp;name: 'JavaScript',<br>
+                &nbsp;&nbsp;show() { <span class="highlight">return this.name;</span> }<br>
+                <strong>}</strong><br><br>
+                <span class="highlight">obj.show() → "JavaScript" (this = obj)</span><br>
+                <span class="highlight">window (in regular function)</span><br>
+                <span class="highlight">undefined (in strict mode)</span>
+            `;
+            document.getElementById('thisExplanation').textContent = 
+                '✅ "this" refers to the object calling the function!';
+        }
+
+        // ==================== SECTION 33: BIND, CALL, APPLY ==================== 
+
+        function demonstrateCallApply() {
+            document.getElementById('callApplyOutput').innerHTML = `
+                <strong>function greet(greeting, punctuation) {</strong><br>
+                &nbsp;&nbsp;return \`\${greeting} \${this.name}\${punctuation}\`;<br>
+                <strong>}</strong><br>
+                const person = { name: 'Alice' };<br><br>
+                <span class="highlight">greet.call(person, 'Hi', '!') → "Hi Alice!"</span><br>
+                <span class="highlight">greet.apply(person, ['Hey', '?']) → "Hey Alice?"</span>
+            `;
+            document.getElementById('callApplyExplanation').textContent = 
+                '✅ call() and apply() invoke functions with specific "this" value!';
+        }
+
+        function demonstrateBind() {
+            document.getElementById('callApplyOutput').innerHTML = `
+                <strong>function greet(name) {</strong><br>
+                &nbsp;&nbsp;return \`\${this.greeting} \${name}\`;<br>
+                <strong>}</strong><br>
+                const context = { greeting: 'Hello' };<br><br>
+                <span class="highlight">const boundGreet = greet.bind(context);</span><br>
+                <span class="highlight">boundGreet('Bob') → "Hello Bob"</span>
+            `;
+            document.getElementById('callApplyExplanation').textContent = 
+                '✅ bind() creates a new function with fixed "this" context!';
+        }
+
+        // ==================== SECTION 34: CURRYING ==================== 
+
+        function updateCurrying() {
+            const x = parseInt(document.getElementById('curryX').value) || 0;
+            const y = parseInt(document.getElementById('curryY').value) || 0;
+            const z = parseInt(document.getElementById('curryZ').value) || 0;
+
+            const result = x + y + z;
+            document.getElementById('curryOutput').innerHTML = `
+                <strong>function add(x, y, z) { return x + y + z; }</strong><br>
+                <strong>const curriedAdd = (x) => (y) => (z) => x + y + z;</strong><br><br>
+                add(${x}, ${y}, ${z}) = ${result}<br>
+                <span class="highlight">curriedAdd(${x})(${y})(${z}) = ${result}</span>
+            `;
+            document.getElementById('curryExplanation').textContent = 
+                '✅ Currying breaks down functions into single-argument functions!';
+        }
+
+        // ==================== SECTION 35: MEMOIZATION ==================== 
+
+        let memoCache = {};
+        function demonstrateMemoization() {
+            function fib(n) { return n <= 1 ? n : fib(n-1) + fib(n-2); }
+            function memoFib(n) {
+                if (n in memoCache) return memoCache[n];
+                if (n <= 1) return n;
+                memoCache[n] = memoFib(n-1) + memoFib(n-2);
+                return memoCache[n];
+            }
+
+            const n = 10;
+            const result = memoFib(n);
+            document.getElementById('memoOutput').innerHTML = `
+                <strong>Without Memoization: fib(${n}) = very slow!</strong><br>
+                <strong>With Memoization: fib(${n}) = <span class="highlight">${result}</span> (cached)</strong><br><br>
+                Cached Results: ${Object.keys(memoCache).length} stored<br>
+                <span class="highlight">Next call is instant!</span>
+            `;
+            document.getElementById('memoExplanation').textContent = 
+                '✅ Memoization stores results to avoid recalculating!';
+        }
+
+        // ==================== SECTION 36: FETCH API ==================== 
+
+        async function demonstrateFetch() {
+            document.getElementById('fetchOutput').innerHTML = `
+                <span class="highlight">Loading...</span>
+            `;
+
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+                const data = await response.json();
+                
+                document.getElementById('fetchOutput').innerHTML = `
+                    <strong>Fetch Request to JSONPlaceholder API:</strong><br><br>
+                    <strong>Status:</strong> <span class="highlight">${response.status}</span><br>
+                    <strong>Title:</strong> ${data.title.substring(0, 50)}...<br>
+                    <strong>Data:</strong> Successfully fetched!<br><br>
+                    ✅ Fetch API is great for getting data from servers!
+                `;
+            } catch (error) {
+                document.getElementById('fetchOutput').innerHTML = `
+                    <strong>Fetch Demo:</strong><br><br>
+                    fetch(url)<br>
+                    &nbsp;.then(response => response.json())<br>
+                    &nbsp;.then(data => console.log(data))<br>
+                    &nbsp;.catch(error => console.error(error))
+                `;
+            }
+
+            document.getElementById('fetchExplanation').textContent = 
+                '✅ Fetch is the modern way to make HTTP requests!';
+        }
+
+        // ==================== SECTION 37: DEBOUNCING & THROTTLING ==================== 
+
+        let debounceTimer;
+        let debounceCount = 0;
+
+        function setupDebounceListener() {
+            const input = document.getElementById('debounceInput');
+            if (input) {
+                input.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        debounceCount++;
+                        document.getElementById('debounceOutput').innerHTML = `
+                            <strong>Debounce Demo:</strong><br><br>
+                            You typed: "${this.value}"<br>
+                            <span class="highlight">Action triggered (after 500ms of no typing)</span><br>
+                            <span class="highlight">Times executed: ${debounceCount}</span>
+                        `;
+                    }, 500);
+                });
+            }
+        }
+
+        // ==================== SECTION 38: GENERATORS & ITERATORS ==================== 
+
+        function demonstrateGenerators() {
+            document.getElementById('generatorOutput').innerHTML = `
+                <strong>function* countToThree() {</strong><br>
+                &nbsp;&nbsp;yield 1;<br>
+                &nbsp;&nbsp;yield 2;<br>
+                &nbsp;&nbsp;yield 3;<br>
+                <strong>}</strong><br><br>
+                <span class="highlight">const gen = countToThree();</span><br>
+                <span class="highlight">gen.next() → {value: 1, done: false}</span><br>
+                <span class="highlight">gen.next() → {value: 2, done: false}</span><br>
+                <span class="highlight">gen.next() → {value: 3, done: false}</span><br>
+                <span class="highlight">gen.next() → {value: undefined, done: true}</span>
+            `;
+            document.getElementById('generatorExplanation').textContent = 
+                '✅ Generators let you pause functions with yield!';
+        }
+
+        // ==================== SECTION 39: FUNCTIONAL PROGRAMMING ==================== 
+
+        function updateFunctionalProgramming() {
+            const num = parseInt(document.getElementById('fpInput').value) || 0;
+            
+            const add2 = (x) => x + 2;
+            const multiply3 = (x) => x * 3;
+            const compose = (f, g) => (x) => f(g(x));
+            
+            const calculate = compose(multiply3, add2);
+            const result = calculate(num);
+
+            document.getElementById('fpOutput').innerHTML = `
+                <strong>Pure Functions:</strong><br>
+                const add2 = (x) => x + 2;<br>
+                const multiply3 = (x) => x * 3;<br><br>
+                <strong>Function Composition:</strong><br>
+                const compose = (f, g) => (x) => f(g(x));<br><br>
+                <span class="highlight">Input: ${num}</span><br>
+                <span class="highlight">add2(${num}) = ${num + 2}</span><br>
+                <span class="highlight">multiply3(${num + 2}) = ${result}</span><br>
+                <strong>Result: ${result}</strong>
+            `;
+            document.getElementById('fpExplanation').textContent = 
+                '✅ Functional programming creates predictable, testable code!';
+        }
+
+        // ==================== SECTION 40: BROWSER RENDERING ==================== 
+
+        function showRenderingPipeline() {
+            document.getElementById('renderingOutput').innerHTML = `
+                <strong>📍 1. Parse HTML</strong><br>
+                Create DOM tree from HTML<br><br>
+                <strong>📍 2. Parse CSS</strong><br>
+                Create CSSOM (CSS Object Model)<br><br>
+                <strong>📍 3. Construct Render Tree</strong><br>
+                Combine DOM + CSSOM<br><br>
+                <strong>📍 4. Layout (Reflow)</strong><br>
+                Calculate positions and sizes<br><br>
+                <strong>📍 5. Paint (Repaint)</strong><br>
+                Render pixels to screen<br><br>
+                <strong>📍 6. Composite</strong><br>
+                Layer and display<br><br>
+                <span class="highlight">⚠️ Avoid forced reflows in loops!</span>
+            `;
+            document.getElementById('renderingExplanation').textContent = 
+                '✅ Understanding rendering helps you optimize performance!';
+        }
+
+        // ==================== SECTION 41: PERFORMANCE OPTIMIZATION ==================== 
+
+        function showPerformanceTips() {
+            document.getElementById('performanceOutput').innerHTML = `
+                <strong>✅ Performance Tips:</strong><br><br>
+                1. <span class="highlight">Code splitting</span> - Load only needed code<br>
+                2. <span class="highlight">Lazy loading</span> - Load images on demand<br>
+                3. <span class="highlight">Caching</span> - Reuse computed values<br>
+                4. <span class="highlight">Minification</span> - Reduce file sizes<br>
+                5. <span class="highlight">Debounce/Throttle</span> - Control event handlers<br>
+                6. <span class="highlight">Use const/let</span> - Block scoping is faster<br>
+                7. <span class="highlight">Avoid eval()</span> - Very slow!<br>
+                8. <span class="highlight">Profile with DevTools</span> - Measure first!
+            `;
+            document.getElementById('performanceExplanation').textContent = 
+                '⚡ Performance is important for user experience!';
+        }
+
+        // ==================== SECTION 42: SECURITY ==================== 
+
+        function showSecurityTips() {
+            document.getElementById('securityOutput').innerHTML = `
+                <strong>🔒 Security Best Practices:</strong><br><br>
+                1. <span class="highlight">Sanitize input</span> - Prevent XSS attacks<br>
+                2. <span class="highlight">Validate server-side</span> - Never trust client<br>
+                3. <span class="highlight">Use HTTPS</span> - Encrypt data in transit<br>
+                4. <span class="highlight">Hide sensitive data</span> - Never in localStorage<br>
+                5. <span class="highlight">CORS headers</span> - Control API access<br>
+                6. <span class="highlight">CSP (Content Security Policy)</span><br>
+                7. <span class="highlight">Use security libraries</span> - DOMPurify<br>
+                8. <span class="highlight">Keep dependencies updated</span>
+            `;
+            document.getElementById('securityExplanation').textContent = 
+                '🔒 Security is critical! Always think like a hacker!';
+        }
+
+        // ==================== SECTION 43: DESIGN PATTERNS ==================== 
+
+        function showDesignPatterns() {
+            document.getElementById('patternsOutput').innerHTML = `
+                <strong>Common JavaScript Design Patterns:</strong><br><br>
+                <strong>1. Singleton</strong><br>
+                Only one instance of a class<br><br>
+                <strong>2. Factory</strong><br>
+                Create objects without specifying classes<br><br>
+                <strong>3. Observer</strong><br>
+                Notify multiple objects about state changes<br><br>
+                <strong>4. Module</strong><br>
+                Encapsulate code in modules<br><br>
+                <strong>5. MVC/MVVM</strong><br>
+                Separate concerns (Model, View, Controller)
+            `;
+            document.getElementById('patternsExplanation').textContent = 
+                '🎨 Design patterns solve recurring problems elegantly!';
+        }
+
+        // ==================== SECTION 44: TESTING ==================== 
+
+        function showTestingExample() {
+            document.getElementById('testingOutput').innerHTML = `
+                <strong>Jest Testing Example:</strong><br><br>
+                function add(a, b) { return a + b; }<br><br>
+                <strong>describe('add function', () => {</strong><br>
+                &nbsp;&nbsp;test('should add two numbers', () => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">expect(add(2, 3)).toBe(5);</span><br>
+                &nbsp;&nbsp;});<br>
+                <strong>});</strong><br><br>
+                <span class="highlight">✅ Test Passed</span>
+            `;
+            document.getElementById('testingExplanation').textContent = 
+                '✅ Testing ensures code quality and catches bugs!';
+        }
+
+        // ==================== SECTION 45: BUILD TOOLS ==================== 
+
+        function showBuildTools() {
+            document.getElementById('buildOutput').innerHTML = `
+                <strong>Modern Build Tools:</strong><br><br>
+                <strong>📦 Webpack</strong><br>
+                Module bundler for JS, CSS, images<br><br>
+                <strong>⚡ Vite</strong><br>
+                Lightning-fast build tool<br><br>
+                <strong>🐒 Babel</strong><br>
+                Transform modern JS to older browsers<br><br>
+                <strong>🔨 Gulp/Grunt</strong><br>
+                Task automation<br><br>
+                <span class="highlight">Benefits:</span> Code splitting, minification, optimization
+            `;
+            document.getElementById('buildExplanation').textContent = 
+                '🔧 Build tools transform your code for production!';
+        }
+
+        // ==================== SECTION 46: TYPESCRIPT ==================== 
+
+        function showTypeScriptExample() {
+            document.getElementById('tsOutput').innerHTML = `
+                <strong>JavaScript (Dynamic):</strong><br>
+                let age = "25"; // Oops! Should be number<br>
+                age = age + 5; // "255" ❌<br><br>
+                <strong>TypeScript (Static Typing):</strong><br>
+                let age: <span class="highlight">number</span> = 25;<br>
+                age = "30"; // ❌ Error at compile time!<br><br>
+                <span class="highlight">Catch bugs before runtime!</span>
+            `;
+            document.getElementById('tsExplanation').textContent = 
+                '📘 TypeScript prevents bugs with type safety!';
+        }
+
+        // ==================== SECTION 47: NODE.JS ==================== 
+
+        function showNodeJsBasics() {
+            document.getElementById('nodeOutput').innerHTML = `
+                <strong>What is Node.js?</strong><br>
+                JavaScript runtime outside browser<br>
+                Built on Chrome's V8 engine<br><br>
+                <strong>Use Cases:</strong><br>
+                • Server-side web applications<br>
+                • REST APIs<br>
+                • Real-time apps (chat, gaming)<br>
+                • Command-line tools<br>
+                • Microservices<br><br>
+                <span class="highlight">$ npm install package-name</span>
+            `;
+            document.getElementById('nodeExplanation').textContent = 
+                '🖥️ Node.js lets you build full-stack apps with JavaScript!';
+        }
+
+        // ==================== SECTION 48: EXPRESS.JS ==================== 
+
+        function showExpressExample() {
+            document.getElementById('expressOutput').innerHTML = `
+                <strong>Express Server Example:</strong><br><br>
+                const express = require('express');<br>
+                const app = express();<br><br>
+                <strong>app.get('/api/users', (req, res) => {</strong><br>
+                &nbsp;&nbsp;<span class="highlight">res.json({users: [...]});</span><br>
+                <strong>});</strong><br><br>
+                <strong>app.listen(3000, () => {</strong><br>
+                &nbsp;&nbsp;console.log('Server running on port 3000');<br>
+                <strong>});</strong>
+            `;
+            document.getElementById('expressExplanation').textContent = 
+                '🚀 Express is the most popular Node.js framework!';
+        }
+
+        // ==================== SECTION 49: JWT AUTHENTICATION ==================== 
+
+        function showJWTExample() {
+            document.getElementById('jwtOutput').innerHTML = `
+                <strong>JWT (JSON Web Token):</strong><br><br>
+                <strong>Header.Payload.Signature</strong><br><br>
+                <strong>Header:</strong> {alg: "HS256", typ: "JWT"}<br>
+                <strong>Payload:</strong> {userId: 123, email: "user@example.com"}<br>
+                <strong>Signature:</strong> secret_key<br><br>
+                <span class="highlight">eyJhbGc...</span><br><br>
+                ✅ Stateless authentication<br>
+                ✅ Works with REST APIs
+            `;
+            document.getElementById('jwtExplanation').textContent = 
+                '🔐 JWT is secure, scalable, and stateless!';
+        }
+
+        // ==================== SECTION 50: API DESIGN ==================== 
+
+        function showAPIDesign() {
+            document.getElementById('apiOutput').innerHTML = `
+                <strong>RESTful API Principles:</strong><br><br>
+                <strong>🔗 Resources (Nouns):</strong><br>
+                GET /api/users - Get all users<br>
+                POST /api/users - Create user<br>
+                GET /api/users/123 - Get user 123<br>
+                PUT /api/users/123 - Update user<br>
+                DELETE /api/users/123 - Delete user<br><br>
+                <strong>✅ HTTP Methods:</strong><br>
+                GET, POST, PUT, PATCH, DELETE<br><br>
+                <span class="highlight">Good design = Easy to use!</span>
+            `;
+            document.getElementById('apiExplanation').textContent = 
+                '🏗️ Good API design makes your service easy to integrate!';
+        }
+
+        // ==================== SECTION 51: REAL-TIME APPS ==================== 
+
+        function showWebSockets() {
+            document.getElementById('wsOutput').innerHTML = `
+                <strong>WebSocket vs HTTP:</strong><br><br>
+                <strong>HTTP:</strong><br>
+                Client → Server (request)<br>
+                Server → Client (response)<br>
+                ❌ Server can't initiate<br><br>
+                <strong>WebSocket:</strong><br>
+                Persistent bidirectional connection<br>
+                ✅ Real-time communication<br>
+                ✅ Lower latency<br><br>
+                <span class="highlight">Use cases: Chat, notifications, gaming</span>
+            `;
+            document.getElementById('wsExplanation').textContent = 
+                '⚡ WebSockets enable true real-time apps!';
+        }
+
+        // ==================== SECTION 52: MICROSERVICES ==================== 
+
+        function showMicroservices() {
+            document.getElementById('microOutput').innerHTML = `
+                <strong>Monolith vs Microservices:</strong><br><br>
+                <strong>❌ Monolith:</strong><br>
+                One big application<br>
+                Hard to scale, update, maintain<br><br>
+                <strong>✅ Microservices:</strong><br>
+                User Service → separate server<br>
+                Order Service → separate server<br>
+                Payment Service → separate server<br><br>
+                <strong>Benefits:</strong><br>
+                Independent scaling, updates, deployments
+            `;
+            document.getElementById('microExplanation').textContent = 
+                '🔀 Microservices = Scalable, maintainable architecture!';
+        }
+
+        // ==================== INITIALIZATION ==================== 
+
+        // Run these functions when the page first loads
+        window.addEventListener('load', function() {
+            initForLoopBoxes();
+            initEvenOddBoxes();
+            initArrayMethodBoxes();
+            initOperators();
+            updateFunctionDemo();
+            updateTernaryDemo();
+            updateStringOperations();
+            showDataTypes();
+            updateConversion();
+            updateTemplateLiterals();
+            updateHOF();
+            displayStorage();
+            demonstrateJSON();
+            updateDivision();
+            updateCurrying();
+            updateFunctionalProgramming();
+            setupDebounceListener();
+            demonstrateClass();
+            demonstratePrototype();
+            demonstrateThis();
+        });
+    </script>
+</body>
+</html>
